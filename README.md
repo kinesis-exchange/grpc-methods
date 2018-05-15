@@ -22,8 +22,6 @@ const { GrpcUnaryMethod } = require('grpc-methods')
 const server = new grpc.Server()
 
 server.addService(serviceDefinition, {
-  myMethod: new GrpcUnaryMethod(myMethod, '[myMethod]')
+  myMethod: new GrpcUnaryMethod(myMethod, '[myMethod]').register()
 })
 ```
-
-## Detail
