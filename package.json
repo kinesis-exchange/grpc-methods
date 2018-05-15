@@ -1,8 +1,8 @@
 {
-  "name": "grpc-method",
+  "name": "grpc-methods",
   "version": "0.1.0",
   "description": "Method wrappers for Grpc to include logging and promises",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "NODE_PATH=. nyc mocha 'src/**/*.spec.js'"
   },
