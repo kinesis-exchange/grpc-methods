@@ -1,0 +1,23 @@
+{
+  "name": "grpc-method",
+  "version": "0.1.0",
+  "description": "Method wrappers for Grpc to include logging and promises",
+  "main": "index.js",
+  "scripts": {
+    "test": "NODE_PATH=. mocha 'src/**/*.spec.js'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kinesis-exchange/grpc-method.git"
+  },
+  "keywords": [
+    "grpc",
+    "promise"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kinesis-exchange/grpc-method/issues"
+  },
+  "homepage": "https://github.com/kinesis-exchange/grpc-method#readme"
+}
