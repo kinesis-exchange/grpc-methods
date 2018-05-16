@@ -25,6 +25,9 @@
   "dependencies": {
     "grpc": "1.11.3"
   },
+  "peerDependencies": {
+    "grpc": "1.11.x"
+  },
   "devDependencies": {
     "chai": "4.1.2",
     "chai-as-promised": "7.1.1",
