@@ -18,12 +18,8 @@ REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
-# Clone the existing gh-pages for this repo into docs/
 # Create a new empty branch if gh-pages doesn't exist yet (should only happen on first deply)
-git clone $REPO docs
-cd docs
 git checkout $TARGET_BRANCH || git checkout --orphan $TARGET_BRANCH
-cd ..
 
 # Clean out existing contents
 rm -rf docs/**/* || exit 0
@@ -32,7 +28,8 @@ rm -rf docs/**/* || exit 0
 docGen
 
 # Now let's go have some fun with the cloned repo
-cd docs
+mv docs/**/* ./
+rm docs
 
 # If there are no changes to the compiled out (e.g. this is a README update) then just bail.
 if [ -z `git diff --exit-code` ]; then
