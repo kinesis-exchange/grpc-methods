@@ -6,8 +6,7 @@
   "scripts": {
     "format": "standard src --fix",
     "test": "npm run format && NODE_PATH=. nyc mocha 'src/**/*.spec.js'",
-    "generate-docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
-    "publish-docs": "./scripts/publish-docs.sh"
+    "generate-docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose"
   },
   "repository": {
     "type": "git",
