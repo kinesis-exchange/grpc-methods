@@ -4,7 +4,8 @@
   "description": "Method wrappers for Grpc to include logging and promises",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_PATH=. nyc mocha 'src/**/*.spec.js'",
+    "format": "standard src --fix",
+    "test": "npm run format && NODE_PATH=. nyc mocha 'src/**/*.spec.js'",
     "generate-docs": "node_modules/.bin/jsdoc --configure .jsdoc.json --verbose",
     "publish-docs": "./scripts/publish-docs.sh"
   },
