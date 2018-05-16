@@ -25,3 +25,7 @@ server.addService(serviceDefinition, {
   myMethod: new GrpcUnaryMethod(myMethod, '[myMethod]').register()
 })
 ```
+
+## [API Reference](http://grpc-methods.kinesis.engineering)
+
+## [Git Repository](http://github.com/kinesis-exchange/grpc-methods)
