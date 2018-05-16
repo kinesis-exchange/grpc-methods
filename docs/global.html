@@ -2,22 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Global</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Global - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GrpcMethod.html">GrpcMethod</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#exec">exec</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#grpcError">grpcError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logError">logError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestCancel">logRequestCancel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestEnd">logRequestEnd</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestParams">logRequestParams</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestStart">logRequestStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logResponse">logResponse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#metadata">metadata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#register">register</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html">GrpcServerStreamingMethod</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#exec">exec</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#grpcError">grpcError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logError">logError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestCancel">logRequestCancel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestEnd">logRequestEnd</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestParams">logRequestParams</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestStart">logRequestStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logResponse">logResponse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#metadata">metadata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#register">register</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#send">send</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html">GrpcUnaryMethod</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#exec">exec</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#grpcError">grpcError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logError">logError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestCancel">logRequestCancel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestEnd">logRequestEnd</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestParams">logRequestParams</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestStart">logRequestStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logResponse">logResponse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#metadata">metadata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#register">register</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PublicError.html">PublicError</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#loadGrpcProto">loadGrpcProto</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#method">method</a></span></li>
+</nav>
+
+<div id="main">
+    
     <h1 class="page-title">Global</h1>
+    
 
     
 
@@ -28,7 +41,9 @@
 
 <header>
     
-        <h2></h2>
+        <h2>
+        
+        </h2>
         
     
 </header>
@@ -87,9 +102,7 @@
 
     
 
-    
-
-    
+     
 
     
 
@@ -100,77 +113,19 @@
 
         
             
+<div class="section-method">
 
     
 
-    
     <h4 class="name" id="loadGrpcProto"><span class="type-signature"></span>loadGrpcProto<span class="signature">(protoPath)</span><span class="type-signature"> &rarr; {Object}</span></h4>
-    
 
     
 
 
 
 <div class="description">
-    Loads a given proto file path into a grpc proto definition
+    <p>Loads a given proto file path into a grpc proto definition</p>
 </div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>protoPath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
 
 
 
@@ -224,87 +179,6 @@
 
 
 
-
-
-<h5>Throws:</h5>
-
-        
-
-<dl>
-    <dt>
-        <div class="param-desc">
-        proto does not exist
-        </div>
-    </dt>
-    <dd></dd>
-    <dt>
-        <dl>
-            <dt>
-                Type
-            </dt>
-            <dd>
-                
-<span class="param-type">Error</span>
-
-
-            </dd>
-        </dl>
-    </dt>
-    <dd></dd>
-</dl>
-
-
-    
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    loaded grpc proto object
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="method"><span class="type-signature"></span>method<span class="signature">(request, responses)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
     <h5>Parameters:</h5>
     
 
@@ -330,13 +204,13 @@
 
         <tr>
             
-                <td class="name"><code>request</code></td>
+                <td class="name"><code>protoPath</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><code>String</code></span>
 
 
             
@@ -346,35 +220,99 @@
 
             
 
-            <td class="description last">Request object constructed by a GrpcMethod wrapper</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>responses</code></td>
-            
-
-            <td class="type">
-            
+            <td class="description last">
                 
-<span class="param-type">Object</span>
-
-
-            
+                
             </td>
-
-            
-
-            
-
-            <td class="description last">Response constructors to pass to the method</td>
         </tr>
 
     
     </tbody>
 </table>
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="section-throws">
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc">
+        <p>proto does not exist</p>
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl>
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type"><code>Error</code></span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
+</div>
+
+
+
+<div class="section-returns">
+<h5>Returns:</h5>
+
+        
+
+<dl class="param-type">
+    <dt>
+        Type:
+    </dt>
+    <dd>
+        
+<span class="param-type"><code>Object</code></span>
+
+
+    </dd>
+</dl>
+
+
+<div class="param-desc">
+    <p>loaded grpc proto object</p>
+</div>
+
+    
+</div>
+
+
+
+</div>
+        
+            
+<div class="section-method">
+
+    
+
+    <h4 class="name" id="method"><span class="type-signature"></span>method<span class="signature">(request, responses)</span><span class="type-signature"></span></h4>
+
+    
+
 
 
 
@@ -429,6 +367,82 @@
 
 
 
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Request object constructed by a GrpcMethod wrapper</p>
+                
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>responses</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><code>Object</code></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <p>Response constructors to pass to the method</p>
+                
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -438,6 +452,14 @@
 
 
 
+
+
+
+
+
+
+
+</div>
         
     
 
@@ -446,22 +468,11 @@
 
         
                 
+<div class="section-members">
 <h4 class="name" id="GrpcError">GrpcError</h4>
 
 
 
-
-
-
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
-<span class="param-type">Object</span>
-
-
-        </li>
-    </ul>
 
 
 
@@ -499,7 +510,7 @@
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type"><code>number</code></span>
 
 
             
@@ -509,8 +520,10 @@
 
             
 
-            <td class="description last">Grpc Status code for the error</td>
+            <td class="description last"><p>Grpc Status code for the error</p></td>
         </tr>
+
+        
 
     
 
@@ -522,7 +535,7 @@
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><code>string</code></span>
 
 
             
@@ -532,8 +545,10 @@
 
             
 
-            <td class="description last">Message to be delivered to the client</td>
+            <td class="description last"><p>Message to be delivered to the client</p></td>
         </tr>
+
+        
 
     
     </tbody>
@@ -584,8 +599,21 @@
 
 
 
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><code>Object</code></span>
 
 
+        </li>
+    </ul>
+
+
+
+
+
+</div>
 
             
     
@@ -600,17 +628,13 @@
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GrpcMethod.html">GrpcMethod</a></li><li><a href="GrpcServerStreamingMethod.html">GrpcServerStreamingMethod</a></li><li><a href="GrpcUnaryMethod.html">GrpcUnaryMethod</a></li></ul><h3>Global</h3><ul><li><a href="global.html#loadGrpcProto">loadGrpcProto</a></li><li><a href="global.html#method">method</a></li></ul>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 15 2018 19:45:29 GMT-0400 (EDT)
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 15 2018 20:31:26 GMT-0400 (EDT) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>

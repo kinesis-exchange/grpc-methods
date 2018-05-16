@@ -2,22 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: load-proto.js</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>load-proto.js - Documentation</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <link type="text/css" rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
 </head>
-
 <body>
 
-<div id="main">
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
 
-    <h1 class="page-title">Source: load-proto.js</h1>
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <li class="nav-link nav-home-link"><a href="index.html">Home</a></li><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GrpcMethod.html">GrpcMethod</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#exec">exec</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#grpcError">grpcError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logError">logError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestCancel">logRequestCancel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestEnd">logRequestEnd</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestParams">logRequestParams</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logRequestStart">logRequestStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#logResponse">logResponse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#metadata">metadata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcMethod.html#register">register</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html">GrpcServerStreamingMethod</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#exec">exec</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#grpcError">grpcError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logError">logError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestCancel">logRequestCancel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestEnd">logRequestEnd</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestParams">logRequestParams</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logRequestStart">logRequestStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#logResponse">logResponse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#metadata">metadata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#register">register</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcServerStreamingMethod.html#send">send</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html">GrpcUnaryMethod</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#exec">exec</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#grpcError">grpcError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logError">logError</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestCancel">logRequestCancel</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestEnd">logRequestEnd</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestParams">logRequestParams</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logRequestStart">logRequestStart</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#logResponse">logResponse</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#metadata">metadata</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="GrpcUnaryMethod.html#register">register</a></span></li><li class="nav-heading"><span class="nav-item-type type-class">C</span><span class="nav-item-name"><a href="PublicError.html">PublicError</a></span></li><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#loadGrpcProto">loadGrpcProto</a></span></li><li class="nav-item"><span class="nav-item-type type-function">F</span><span class="nav-item-name"><a href="global.html#method">method</a></span></li>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">load-proto.js</h1>
+    
 
     
 
@@ -61,17 +74,13 @@ module.exports = loadGrpcProto
 
 </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="GrpcMethod.html">GrpcMethod</a></li><li><a href="GrpcServerStreamingMethod.html">GrpcServerStreamingMethod</a></li><li><a href="GrpcUnaryMethod.html">GrpcUnaryMethod</a></li></ul><h3>Global</h3><ul><li><a href="global.html#loadGrpcProto">loadGrpcProto</a></li><li><a href="global.html#method">method</a></li></ul>
-</nav>
-
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 15 2018 19:45:29 GMT-0400 (EDT)
+    Generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue May 15 2018 20:31:26 GMT-0400 (EDT) using the Minami theme.
 </footer>
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
 </body>
 </html>
