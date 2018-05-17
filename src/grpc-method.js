@@ -58,8 +58,7 @@ class GrpcMethod {
   }
 
   /**
-   * Generates grpc meta data for a request that includes a relayer identifier and
-   * timestamp
+   * Generates timestamp meta data for a grpc request
    *
    * @return {grpc#Metadata}
    */
