@@ -120,6 +120,11 @@ describe('GrpcServerStreamingMethod', () => {
         expect(grpcMethod.send).to.have.been.calledOnce()
         expect(grpcMethod.send).to.have.been.calledOn(grpcMethod)
       })
+
+      it('includes a metadata object', () => {
+        grpcMethod.exec(call)
+        expect(method).to.have.been.calledWith(sinon.match({ metadata: {} }))
+      })
     })
 
     it('provides the responses to the method', () => {
@@ -148,9 +153,12 @@ describe('GrpcServerStreamingMethod', () => {
         metadata.returns(fakeMetadata)
 
         await grpcMethod.exec(call)
+
+        const request = method.args[0][0]
         
         expect(metadata).to.have.been.calledOnce()
         expect(metadata).to.have.been.calledOn(grpcMethod)
+        expect(metadata).to.have.been.calledWith(request.metadata)
         expect(call.end).to.have.been.calledWith(fakeMetadata)
       })
     })
@@ -187,6 +195,14 @@ describe('GrpcServerStreamingMethod', () => {
           expect(grpcError).to.have.been.calledWith(fakeError)
           expect(call.destroy).to.have.been.calledOnce()
           expect(call.destroy).to.have.been.calledWith(fakeFormatted)
+        })
+
+        it('includes metadata with the error', async () => {
+          await grpcMethod.exec(call)
+
+          const request = method.args[0][0]
+
+          expect(grpcError).to.have.been.calledWith(sinon.match.any, sinon.match({ metadata: request.metadata }))
         })
       })
 
@@ -227,6 +243,16 @@ describe('GrpcServerStreamingMethod', () => {
           expect(grpcError).to.have.been.calledWith(fakeError)
           expect(call.destroy).to.have.been.calledOnce()
           expect(call.destroy).to.have.been.calledWith(fakeFormatted)
+        })
+
+        it('includes metadata with the error', async () => {
+          grpcMethod.exec(call)
+
+          await delay(20)
+
+          const request = method.args[0][0]
+
+          expect(grpcError).to.have.been.calledWith(sinon.match.any, sinon.match({ metadata: request.metadata }))
         })
       })
     })

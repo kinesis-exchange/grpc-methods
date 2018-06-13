@@ -12,15 +12,18 @@ class GrpcServerStreamingMethod extends GrpcMethod {
    * @return {void}
    */
   async exec (call) {
+    let request
+
     try {
       this.logRequestStart()
 
       const { method, logger, requestOptions } = this
 
-      const request = {
+      request = {
         params: call.request,
         logger: logger,
         send: this.send.bind(this, call),
+        metadata: {},
         ...requestOptions
       }
 
@@ -35,11 +38,11 @@ class GrpcServerStreamingMethod extends GrpcMethod {
 
       this.logRequestEnd()
 
-      call.end(this.metadata())
+      call.end(this.metadata(request.metadata))
     } catch (e) {
       this.logError(e)
 
-      call.destroy(this.grpcError(e))
+      call.destroy(this.grpcError(e, { metadata: request.metadata }))
     }
   }
 

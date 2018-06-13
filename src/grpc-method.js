@@ -81,9 +81,11 @@ class GrpcMethod {
    * Format errors for consumption by external grpc clients
    *
    * @param  {error} err Error to be formatted for public consumption
+   * @param {Object} [options={}]
+   * @param {Object} [options.metadata={}] Custom metadata to be added to this error
    * @return {GrpcError}
    */
-  grpcError (err) {
+  grpcError (err, { metadata = {} } = {}) {
     let message = `Call terminated before completion`
 
     if (err instanceof PublicError) {
@@ -93,7 +95,7 @@ class GrpcMethod {
     return {
       code: grpc.status.INTERNAL,
       message: `${this.messageId} ${message}`,
-      metadata: this.metadata()
+      metadata: this.metadata(metadata)
     }
   }
 

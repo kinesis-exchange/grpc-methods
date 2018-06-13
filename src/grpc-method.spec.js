@@ -141,9 +141,13 @@ describe('GrpcMethod', () => {
   })
 
   describe('#grpcError', () => {
-    it('creates a grpc-compliant error object', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    let grpcMethod
 
+    beforeEach(() => {
+      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    })
+
+    it('creates a grpc-compliant error object', () => {
       const err = new Error('fake error')
       const grpcErr = grpcMethod.grpcError(err)
 
@@ -153,6 +157,18 @@ describe('GrpcMethod', () => {
       expect(grpcErr).to.have.property('message')
       expect(grpcErr).to.have.property('metadata')
       expect(grpcErr.metadata).to.be.instanceOf(grpcMetadata)
+    })
+
+    it('adds custom metadata to the error', () => {
+      const err = new Error('fake error')
+      const customMeta = {
+        hello: 'darkness',
+        myOld: 'friend'
+      }
+      const grpcErr = grpcMethod.grpcError(err, { metadata: customMeta })
+
+      expect(grpcMetadataAdd).to.have.been.calledWith('hello', 'darkness')
+      expect(grpcMetadataAdd).to.have.been.calledWith('myOld', 'friend')
     })
 
     xit('marks errors as internal')
