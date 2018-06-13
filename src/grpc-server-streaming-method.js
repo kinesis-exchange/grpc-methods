@@ -39,7 +39,6 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     } catch (e) {
       this.logError(e)
 
-      // TODO: do we need to set metadata somewhere?
       call.destroy(this.grpcError(e))
     }
   }

@@ -72,6 +72,7 @@ class GrpcMethod {
    * @typedef {Object} GrpcError
    * @property {number} code Grpc Status code for the error
    * @property {string} message Message to be delivered to the client
+   * @property {grpc#Metadata} metadata Metadata to be delivered to the client
    */
 
   /**
