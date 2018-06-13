@@ -35,7 +35,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
 
       this.logRequestEnd()
 
-      call.end(this.metadata)
+      call.end(this.metadata())
     } catch (e) {
       this.logError(e)
 

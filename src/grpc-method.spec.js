@@ -125,7 +125,8 @@ describe('GrpcMethod', () => {
       expect(Object.keys(grpcErr)).to.have.lengthOf(3)
       expect(grpcErr).to.have.property('code')
       expect(grpcErr).to.have.property('message')
-      expect(grpcErr).to.have.property('metadata', grpcMethod.metadata)
+      expect(grpcErr).to.have.property('metadata')
+      expect(grpcErr.metadata).to.be.instanceOf(grpcMetadata)
     })
 
     xit('marks errors as internal')

@@ -20,6 +20,7 @@ describe('GrpcServerStreamingMethod', () => {
   let logger
   let responses
   let messageId
+  let metadata
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -32,6 +33,7 @@ describe('GrpcServerStreamingMethod', () => {
     logResponse = sinon.stub(GrpcServerStreamingMethod.prototype, 'logResponse')
     logError = sinon.stub(GrpcServerStreamingMethod.prototype, 'logError')
     grpcError = sinon.stub(GrpcServerStreamingMethod.prototype, 'grpcError')
+    metadata = sinon.stub(GrpcServerStreamingMethod.prototype, 'metadata')
 
     logger = {
       error: sinon.stub(),
@@ -142,8 +144,14 @@ describe('GrpcServerStreamingMethod', () => {
       })
 
       it('includes metadata with the stream end', async () => {
+        const fakeMetadata = { my: 'fake' }
+        metadata.returns(fakeMetadata)
+
         await grpcMethod.exec(call)
-        expect(call.end).to.have.been.calledWith(grpcMethod.metadata)
+        
+        expect(metadata).to.have.been.calledOnce()
+        expect(metadata).to.have.been.calledOn(grpcMethod)
+        expect(call.end).to.have.been.calledWith(fakeMetadata)
       })
     })
 
