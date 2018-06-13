@@ -101,7 +101,7 @@ class GrpcMethod {
     }
 
     return {
-      code: statusCode,
+      code: status,
       message: `${this.messageId} ${message}`,
       metadata: this.metadata(metadata)
     }
