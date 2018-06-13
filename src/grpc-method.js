@@ -6,9 +6,16 @@ const { PublicError } = require('./errors')
  */
 class GrpcMethod {
   /**
-   * @name method
-   * @function
-   * @param {Object} request Request object constructed by a GrpcMethod wrapper
+   * @typedef {Object} GrpcMethod~request
+   * @property {Object} params Request parameters from the client
+   * @property {Object} logger Logger to be used by the method
+   * @property {Object} metadata Metadata object that will be included with the response
+   * @property {*} * Additional parameters to be included in each request object
+   */
+
+  /**
+   * @typedef {Function} GrpcMethod~method
+   * @param {GrpcMethod~request} request Request object constructed by a GrpcMethod wrapper
    * @param {Object} responses Response constructors to pass to the method
    */
 
@@ -60,10 +67,12 @@ class GrpcMethod {
   /**
    * Generates timestamp meta data for a grpc request
    *
+   * @param {Object} customMeta Key value object of custom metadata to add
    * @return {grpc#Metadata}
    */
-  metadata () {
+  metadata (customMeta = {}) {
     const meta = new grpc.Metadata()
+    Object.entries(customMeta).forEach(([key, value]) => meta.add(key, value))
     meta.add('timestamp', (new Date()).toString())
     return meta
   }
@@ -78,11 +87,13 @@ class GrpcMethod {
   /**
    * Format errors for consumption by external grpc clients
    *
-   * @param  {error}  err        Error to be formatted for public consumption
-   * @param  {Number} statusCode grpc Status code
+   * @param  {error} err Error to be formatted for public consumption
+   * @param {Object} [options={}]
+   * @param {Object} [options.metadata={}] Custom metadata to be added to this error
+   * @param {Number} [options.status=grpc.status.INTERNAL] GRPC Status code to be included with the error
    * @return {GrpcError}
    */
-  grpcError (err, statusCode = grpc.status.INTERNAL) {
+  grpcError (err, { metadata = {}, status = grpc.status.INTERNAL } = {}) {
     let message = `Call terminated before completion`
 
     if (err instanceof PublicError) {
@@ -92,7 +103,7 @@ class GrpcMethod {
     return {
       code: statusCode,
       message: `${this.messageId} ${message}`,
-      metadata: this.metadata()
+      metadata: this.metadata(metadata)
     }
   }
 
