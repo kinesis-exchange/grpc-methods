@@ -89,7 +89,8 @@ class GrpcMethod {
 
     return {
       code: grpc.status.INTERNAL,
-      message: `${this.messageId} ${message}`
+      message: `${this.messageId} ${message}`,
+      metadata: this.metadata
     }
   }
 

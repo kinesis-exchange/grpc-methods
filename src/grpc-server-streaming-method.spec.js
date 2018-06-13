@@ -140,6 +140,11 @@ describe('GrpcServerStreamingMethod', () => {
         expect(call.end).to.have.been.calledOnce()
         expect(call.end).to.have.been.calledOn(call)
       })
+
+      it('includes metadata with the stream end', async () => {
+        await grpcMethod.exec(call)
+        expect(call.end).to.have.been.calledWith(grpcMethod.metadata)
+      })
     })
 
     describe('error', () => {
