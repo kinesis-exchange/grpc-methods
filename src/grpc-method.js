@@ -77,10 +77,11 @@ class GrpcMethod {
   /**
    * Format errors for consumption by external grpc clients
    *
-   * @param  {error} err Error to be formatted for public consumption
+   * @param  {error}  err        Error to be formatted for public consumption
+   * @param  {Number} statusCode grpc Status code
    * @return {GrpcError}
    */
-  grpcError (err) {
+  grpcError (err, statusCode = grpc.status.INTERNAL) {
     let message = `Call terminated before completion`
 
     if (err instanceof PublicError) {
@@ -88,7 +89,7 @@ class GrpcMethod {
     }
 
     return {
-      code: grpc.status.INTERNAL,
+      code: statusCode,
       message: `${this.messageId} ${message}`
     }
   }

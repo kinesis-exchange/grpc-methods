@@ -115,9 +115,13 @@ describe('GrpcMethod', () => {
   })
 
   describe('#grpcError', () => {
-    it('creates a grpc-compliant error object', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    let grpcMethod
 
+    beforeEach(() => {
+      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    })
+
+    it('creates a grpc-compliant error object', () => {
       const err = new Error('fake error')
       const grpcErr = grpcMethod.grpcError(err)
 
@@ -127,7 +131,20 @@ describe('GrpcMethod', () => {
       expect(grpcErr).to.have.property('message')
     })
 
-    xit('marks errors as internal')
+    it('uses a custom error code if available', () => {
+      const err = new Error('fake error')
+      const fakeStatusCode = 16
+      const grpcErr = grpcMethod.grpcError(err, fakeStatusCode)
+
+      expect(grpcErr.code).to.be.equal(fakeStatusCode)
+    })
+
+    it('marks errors as internal by default', () => {
+      const err = new Error('fake error')
+      const grpcErr = grpcMethod.grpcError(err)
+
+      expect(grpcErr.code).to.be.equal(grpcStatus.INTERNAL)
+    })
 
     xit('defaults the error message')
 
