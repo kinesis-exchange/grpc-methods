@@ -129,6 +129,7 @@ describe('GrpcUnaryMethod', () => {
 
         expect(sendUnaryData).to.have.been.calledOnce()
         expect(sendUnaryData.args[0][2]).to.be.equal(fakeMetadata)
+        expect(metadata).to.have.been.calledWith(method.args[0][0].metadata)
       })
     })
 
@@ -167,6 +168,7 @@ describe('GrpcUnaryMethod', () => {
 
         expect(sendUnaryData).to.have.been.calledOnce()
         expect(sendUnaryData.args[0][2]).to.be.equal(fakeMetadata)
+        expect(metadata).to.have.been.calledWith(method.args[0][0].metadata)
       })
     })
 
