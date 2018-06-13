@@ -87,10 +87,10 @@ class GrpcMethod {
   /**
    * Format errors for consumption by external grpc clients
    *
-   * @param  {error}         err                                   Error to be formatted for public consumption
-   * @param  {Object}        [options={}]
-   * @param  {Object}        [options.metadata={}]                 Custom metadata to be added to this error
-   * @param  {grpc.status.*} [options.status=grpc.status.INTERNAL] GRPC Status code to be included with the error
+   * @param  {error}           err                                   Error to be formatted for public consumption
+   * @param  {Object}          [options={}]
+   * @param  {Object}          [options.metadata={}]                 Custom metadata to be added to this error
+   * @param  {grpc.status<ANY>} [options.status=grpc.status.INTERNAL] GRPC Status code to be included with the error
    * @return {GrpcError}
    */
   grpcError (err, { metadata = {}, status = grpc.status.INTERNAL } = {}) {
