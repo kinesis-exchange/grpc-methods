@@ -159,6 +159,21 @@ describe('GrpcMethod', () => {
       expect(grpcErr.metadata).to.be.instanceOf(grpcMetadata)
     })
 
+    it('uses a custom error code if available', () => {
+      const err = new Error('fake error')
+      const fakeStatusCode = 16
+      const grpcErr = grpcMethod.grpcError(err, { status: fakeStatusCode })
+
+      expect(grpcErr.code).to.be.equal(fakeStatusCode)
+    })
+
+    it('marks errors as internal by default', () => {
+      const err = new Error('fake error')
+      const grpcErr = grpcMethod.grpcError(err)
+
+      expect(grpcErr.code).to.be.equal(grpcStatus.INTERNAL)
+    })
+
     it('adds custom metadata to the error', () => {
       const err = new Error('fake error')
       const customMeta = {
@@ -170,8 +185,6 @@ describe('GrpcMethod', () => {
       expect(grpcMetadataAdd).to.have.been.calledWith('hello', 'darkness')
       expect(grpcMetadataAdd).to.have.been.calledWith('myOld', 'friend')
     })
-
-    xit('marks errors as internal')
 
     xit('defaults the error message')
 
