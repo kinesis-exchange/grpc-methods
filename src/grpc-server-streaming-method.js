@@ -34,12 +34,11 @@ class GrpcServerStreamingMethod extends GrpcMethod {
       await method(request, this.responses)
 
       this.logRequestEnd()
-      // TODO: is this the write way to terminate a call?
-      call.end()
+
+      call.end(this.metadata())
     } catch (e) {
       this.logError(e)
 
-      // TODO: do we need to set metadata somewhere?
       call.destroy(this.grpcError(e))
     }
   }
