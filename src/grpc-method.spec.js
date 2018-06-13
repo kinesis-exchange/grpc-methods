@@ -122,9 +122,11 @@ describe('GrpcMethod', () => {
       const grpcErr = grpcMethod.grpcError(err)
 
       expect(grpcErr).to.be.a('object')
-      expect(Object.keys(grpcErr)).to.have.lengthOf(2)
+      expect(Object.keys(grpcErr)).to.have.lengthOf(3)
       expect(grpcErr).to.have.property('code')
       expect(grpcErr).to.have.property('message')
+      expect(grpcErr).to.have.property('metadata')
+      expect(grpcErr.metadata).to.be.instanceOf(grpcMetadata)
     })
 
     xit('marks errors as internal')
