@@ -60,10 +60,12 @@ class GrpcMethod {
   /**
    * Generates timestamp meta data for a grpc request
    *
+   * @param {Object} customMeta Key value object of custom metadata to add
    * @return {grpc#Metadata}
    */
-  metadata () {
+  metadata (customMeta = {}) {
     const meta = new grpc.Metadata()
+    Object.entries(customMeta).forEach(([key, value]) => meta.add(key, value))
     meta.add('timestamp', (new Date()).toString())
     return meta
   }

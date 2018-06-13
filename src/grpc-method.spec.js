@@ -1,5 +1,5 @@
 const path = require('path')
-const { chai, rewire, sinon } = require('test/test-helper')
+const { chai, rewire, sinon, timekeeper } = require('test/test-helper')
 
 const { expect } = chai
 
@@ -103,15 +103,41 @@ describe('GrpcMethod', () => {
   })
 
   describe('#metatdata', () => {
-    it('creates grpc metadata', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    let grpcMethod
 
+    beforeEach(() => {
+      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    })
+
+    it('creates grpc metadata', () => {
       const meta = grpcMethod.metadata()
 
       expect(meta).to.be.instanceof(grpcMetadata)
     })
 
-    xit('adds a timestamp to the metadata')
+    it('adds a timestamp to the metadata', () => {
+      const time = new Date()
+      timekeeper.freeze(time)
+
+      grpcMethod.metadata()
+
+      expect(grpcMetadataAdd).to.have.been.calledOnce()
+      expect(grpcMetadataAdd).to.have.been.calledWith('timestamp', time.toString())
+
+      timekeeper.reset()
+    })
+
+    it('adds custom metadata', () => {
+      const customMeta = {
+        hello: 'darkness',
+        myOld: 'friend'
+      }
+      
+      grpcMethod.metadata(customMeta)
+
+      expect(grpcMetadataAdd).to.have.been.calledWith('hello', 'darkness')
+      expect(grpcMetadataAdd).to.have.been.calledWith('myOld', 'friend')
+    })
   })
 
   describe('#grpcError', () => {
