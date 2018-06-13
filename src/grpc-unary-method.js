@@ -6,6 +6,11 @@ const GrpcMethod = require('./grpc-method')
  */
 class GrpcUnaryMethod extends GrpcMethod {
   /**
+   * @typedef {Object} GrpcUnaryMethod~request
+   * @extends {GrpcMethod~request}
+   */
+
+  /**
    * Execute a unary method and return a response to the client
    *
    * @param  {grpc~ServerUnaryCall}
@@ -20,6 +25,10 @@ class GrpcUnaryMethod extends GrpcMethod {
 
       const { method, logger, requestOptions } = this
 
+      /**
+       * Request for the method
+       * @type {GrpcUnaryMethod~request}
+       */
       request = {
         params: call.request,
         logger,

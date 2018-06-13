@@ -6,6 +6,12 @@ const GrpcMethod = require('./grpc-method')
  */
 class GrpcServerStreamingMethod extends GrpcMethod {
   /**
+   * @typedef {Object} GrpcServerStreamingMethod~request
+   * @extends {GrpcMethod~request}
+   * @property {Function} send Send data back to the client
+   */
+
+  /**
    * Execute a server-streaming method and close the stream when it concludes
    *
    * @param  {grpc~ServerWritableStream} call
