@@ -9,6 +9,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
    * @typedef {Object} GrpcServerStreamingMethod~request
    * @extends {GrpcMethod~request}
    * @property {Function} send Send data back to the client
+   * @property {Function} onCancel Trigger a listener when the client cancels the stream
    */
 
   /**
@@ -29,6 +30,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         params: call.request,
         logger: logger,
         send: this.send.bind(this, call),
+        onCancel: (fn) => { call.on('cancelled', fn) },
         metadata: {},
         ...requestOptions
       }
