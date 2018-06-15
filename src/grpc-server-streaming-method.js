@@ -31,6 +31,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         logger: logger,
         send: this.send.bind(this, call),
         onCancel: (fn) => { call.on('cancelled', fn) },
+        onError: (fn) => { call.on('error', fn) },
         metadata: {},
         ...requestOptions
       }
@@ -39,6 +40,11 @@ class GrpcServerStreamingMethod extends GrpcMethod {
 
       call.on('cancelled', () => {
         this.logRequestCancel()
+        this.logRequestEnd()
+      })
+
+      call.on('error', (e) => {
+        this.logError(e)
         this.logRequestEnd()
       })
 
