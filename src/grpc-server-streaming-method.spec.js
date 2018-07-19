@@ -20,7 +20,9 @@ describe('GrpcServerStreamingMethod', () => {
   let logger
   let responses
   let messageId
+  let metadataStub
   let metadata
+  let metadataContents
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -33,7 +35,7 @@ describe('GrpcServerStreamingMethod', () => {
     logResponse = sinon.stub(GrpcServerStreamingMethod.prototype, 'logResponse')
     logError = sinon.stub(GrpcServerStreamingMethod.prototype, 'logError')
     grpcError = sinon.stub(GrpcServerStreamingMethod.prototype, 'grpcError')
-    metadata = sinon.stub(GrpcServerStreamingMethod.prototype, 'metadata')
+    metadataStub = sinon.stub(GrpcServerStreamingMethod.prototype, 'metadata')
 
     logger = {
       error: sinon.stub(),
@@ -50,10 +52,19 @@ describe('GrpcServerStreamingMethod', () => {
     requestOptions = {
       fake: 'option'
     }
+    metadataContents = {
+      fakemeta: 'mymeta'
+    }
+    metadata = {
+      getMap () {
+        return metadataContents
+      }
+    }
 
     // TODO: is this actually what GRPC exposes?
     call = {
       request: 'fake request',
+      metadata,
       write: sinon.stub(),
       end: sinon.stub(),
       destroy: sinon.stub(),
@@ -157,15 +168,20 @@ describe('GrpcServerStreamingMethod', () => {
         expect(call.on).to.have.been.calledWith('error', fakeListener)
       })
 
-      it('includes a metadata object', () => {
+      it('includes the client metadata', () => {
         grpcMethod.exec(call)
-        expect(method).to.have.been.calledWith(sinon.match({ metadata: {} }))
+        expect(method).to.have.been.calledWith(sinon.match({ metadata: metadataContents }))
       })
     })
 
     it('provides the responses to the method', () => {
       grpcMethod.exec(call)
       expect(method).to.have.been.calledWith(sinon.match.any, sinon.match(responses))
+    })
+
+    it('provides a response metadata object to be modified', () => {
+      grpcMethod.exec(call)
+      expect(method).to.have.been.calledWith(sinon.match.any, sinon.match.any, {})
     })
 
     describe('success', () => {
@@ -184,17 +200,17 @@ describe('GrpcServerStreamingMethod', () => {
         expect(call.end).to.have.been.calledOn(call)
       })
 
-      it('includes metadata with the stream end', async () => {
+      it('includes response metadata with the stream end', async () => {
         const fakeMetadata = { my: 'fake' }
-        metadata.returns(fakeMetadata)
+        metadataStub.returns(fakeMetadata)
 
         await grpcMethod.exec(call)
 
-        const request = method.args[0][0]
-        
-        expect(metadata).to.have.been.calledOnce()
-        expect(metadata).to.have.been.calledOn(grpcMethod)
-        expect(metadata).to.have.been.calledWith(request.metadata)
+        const responseMetadata = method.args[0][2]
+
+        expect(metadataStub).to.have.been.calledOnce()
+        expect(metadataStub).to.have.been.calledOn(grpcMethod)
+        expect(metadataStub).to.have.been.calledWith(responseMetadata)
         expect(call.end).to.have.been.calledWith(fakeMetadata)
       })
     })
@@ -236,9 +252,9 @@ describe('GrpcServerStreamingMethod', () => {
         it('includes metadata with the error', async () => {
           await grpcMethod.exec(call)
 
-          const request = method.args[0][0]
+          const responseMetadata = method.args[0][2]
 
-          expect(grpcError).to.have.been.calledWith(sinon.match.any, sinon.match({ metadata: request.metadata }))
+          expect(grpcError).to.have.been.calledWith(sinon.match.any, sinon.match({ metadata: responseMetadata }))
         })
       })
 
@@ -286,9 +302,9 @@ describe('GrpcServerStreamingMethod', () => {
 
           await delay(20)
 
-          const request = method.args[0][0]
+          const responseMetadata = method.args[0][2]
 
-          expect(grpcError).to.have.been.calledWith(sinon.match.any, sinon.match({ metadata: request.metadata }))
+          expect(grpcError).to.have.been.calledWith(sinon.match.any, sinon.match({ metadata: responseMetadata }))
         })
       })
     })

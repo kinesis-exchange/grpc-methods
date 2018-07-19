@@ -18,6 +18,11 @@ class GrpcUnaryMethod extends GrpcMethod {
    * @return {void}
    */
   async exec (call, sendUnaryData) {
+    // this object should be modified (but not replaced) by `method` in order to send
+    // metadata back to the client. As such, we instantiate an empty object here and
+    // keep a reference to it, so any additions or modifications made by `method` we
+    // can capture.
+    const responseMetadata = {}
     let request
 
     try {
@@ -32,23 +37,23 @@ class GrpcUnaryMethod extends GrpcMethod {
       request = {
         params: call.request,
         logger,
-        metadata: {},
+        metadata: call.metadata.getMap(),
         ...requestOptions
       }
 
       this.logRequestParams(request.params)
 
-      const response = await method(request, this.responses)
+      const response = await method(request, this.responses, responseMetadata)
 
       this.logResponse(response)
 
       // sendUnaryData expects a callback-like signature, so we leave the first parameter null in the success case
-      return sendUnaryData(null, response, this.metadata(request.metadata))
+      return sendUnaryData(null, response, this.metadata(responseMetadata))
     } catch (err) {
       this.logError(err)
 
       // sendUnaryData expects a callback-like signature, so we put the error in the first parameter
-      return sendUnaryData(this.grpcError(err), null, this.metadata(request.metadata))
+      return sendUnaryData(this.grpcError(err), null, this.metadata(responseMetadata))
     } finally {
       this.logRequestEnd()
     }
