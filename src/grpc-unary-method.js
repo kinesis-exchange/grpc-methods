@@ -18,6 +18,10 @@ class GrpcUnaryMethod extends GrpcMethod {
    * @return {void}
    */
   async exec (call, sendUnaryData) {
+    // this object should be modified (but not replaced) by `method` in order to send
+    // metadata back to the client. As such, we instantiate an empty object here and
+    // keep a reference to it, so any additions or modifications made by `method` we
+    // can capture.
     const responseMetadata = {}
     let request
 
