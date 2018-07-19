@@ -16,6 +16,12 @@
     "grpc",
     "promise"
   ],
+  "standard": {
+    "env": [
+      "mocha",
+      "chai"
+    ]
+  },
   "author": "",
   "license": "MIT",
   "bugs": {
