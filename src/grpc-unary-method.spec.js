@@ -16,11 +16,13 @@ describe('GrpcUnaryMethod', () => {
   let logRequestEnd
   let logResponse
   let logError
-  let metadata
+  let metadataStub
   let grpcError
   let logger
   let responses
   let messageId
+  let metadata
+  let metadataContents
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -31,7 +33,7 @@ describe('GrpcUnaryMethod', () => {
     logRequestEnd = sinon.stub(GrpcUnaryMethod.prototype, 'logRequestEnd')
     logResponse = sinon.stub(GrpcUnaryMethod.prototype, 'logResponse')
     logError = sinon.stub(GrpcUnaryMethod.prototype, 'logError')
-    metadata = sinon.stub(GrpcUnaryMethod.prototype, 'metadata')
+    metadataStub = sinon.stub(GrpcUnaryMethod.prototype, 'metadata')
     grpcError = sinon.stub(GrpcUnaryMethod.prototype, 'grpcError')
 
     logger = {
@@ -49,9 +51,18 @@ describe('GrpcUnaryMethod', () => {
     requestOptions = {
       fake: 'option'
     }
+    metadataContents = {
+      fakemeta: 'mymeta'
+    }
+    metadata = {
+      getMap () {
+        return metadataContents
+      }
+    }
 
     call = {
-      request: 'fake request'
+      request: 'fake request',
+      metadata
     }
     sendUnaryData = sinon.stub()
   })
@@ -92,11 +103,31 @@ describe('GrpcUnaryMethod', () => {
         grpcMethod.exec(call, sendUnaryData)
         expect(method).to.have.been.calledWith(sinon.match(requestStub))
       })
+
+      it('provides the params of the call', () => {
+        grpcMethod.exec(call, sendUnaryData)
+        expect(method).to.have.been.calledWith(sinon.match({ params: call.request }))
+      })
+
+      it('provides a logger for the method', () => {
+        grpcMethod.exec(call, sendUnaryData)
+        expect(method).to.have.been.calledWith(sinon.match({ logger }))
+      })
+
+      it('provides the client metadata', () => {
+        grpcMethod.exec(call, sendUnaryData)
+        expect(method).to.have.been.calledWith(sinon.match({ metadata: metadataContents }))
+      })
     })
 
     it('provides the responses to the method', () => {
       grpcMethod.exec(call, sendUnaryData)
       expect(method).to.have.been.calledWith(sinon.match.any, sinon.match(responses))
+    })
+
+    it('provides a response metadata object modify', () => {
+      grpcMethod.exec(call, sendUnaryData)
+      expect(method).to.have.been.calledWith(sinon.match.any, sinon.match.any, {})
     })
 
     describe('success', () => {
@@ -123,13 +154,13 @@ describe('GrpcUnaryMethod', () => {
 
       it('sends metadata with the output', async () => {
         const fakeMetadata = 'goodbye'
-        metadata.returns(fakeMetadata)
+        metadataStub.returns(fakeMetadata)
 
         await grpcMethod.exec(call, sendUnaryData)
 
         expect(sendUnaryData).to.have.been.calledOnce()
         expect(sendUnaryData.args[0][2]).to.be.equal(fakeMetadata)
-        expect(metadata).to.have.been.calledWith(method.args[0][0].metadata)
+        expect(metadataStub).to.have.been.calledWith(method.args[0][2])
       })
     })
 
@@ -162,13 +193,13 @@ describe('GrpcUnaryMethod', () => {
 
       it('includes metadata with the error', async () => {
         const fakeMetadata = 'goodbye'
-        metadata.returns(fakeMetadata)
+        metadataStub.returns(fakeMetadata)
 
         await grpcMethod.exec(call, sendUnaryData)
 
         expect(sendUnaryData).to.have.been.calledOnce()
         expect(sendUnaryData.args[0][2]).to.be.equal(fakeMetadata)
-        expect(metadata).to.have.been.calledWith(method.args[0][0].metadata)
+        expect(metadataStub).to.have.been.calledWith(method.args[0][2])
       })
     })
 

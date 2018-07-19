@@ -9,7 +9,7 @@ class GrpcMethod {
    * @typedef {Object} GrpcMethod~request
    * @property {Object} params Request parameters from the client
    * @property {Object} logger Logger to be used by the method
-   * @property {Object} metadata Metadata object that will be included with the response
+   * @property {Object} metadata Metadata from the client
    * @property {*} * Additional parameters to be included in each request object
    */
 
@@ -17,6 +17,7 @@ class GrpcMethod {
    * @typedef {Function} GrpcMethod~method
    * @param {GrpcMethod~request} request Request object constructed by a GrpcMethod wrapper
    * @param {Object} responses Response constructors to pass to the method
+   * @param {Object} responseMetadata Metadata that will be returned to the client. This can be modified by adding properties to it.
    */
 
   /**

@@ -19,6 +19,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
    * @return {void}
    */
   async exec (call) {
+    const responseMetadata = {}
     let request
 
     try {
@@ -32,7 +33,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         send: this.send.bind(this, call),
         onCancel: (fn) => { call.on('cancelled', fn) },
         onError: (fn) => { call.on('error', fn) },
-        metadata: {},
+        metadata: call.metadata.getMap(),
         ...requestOptions
       }
 
@@ -48,15 +49,15 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         this.logRequestEnd()
       })
 
-      await method(request, this.responses)
+      await method(request, this.responses, responseMetadata)
 
       this.logRequestEnd()
 
-      call.end(this.metadata(request.metadata))
+      call.end(this.metadata(responseMetadata))
     } catch (e) {
       this.logError(e)
 
-      call.destroy(this.grpcError(e, { metadata: request.metadata }))
+      call.destroy(this.grpcError(e, { metadata: responseMetadata }))
     }
   }
 
