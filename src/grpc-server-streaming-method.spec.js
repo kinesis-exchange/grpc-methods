@@ -67,7 +67,7 @@ describe('GrpcServerStreamingMethod', () => {
       metadata,
       write: sinon.stub(),
       end: sinon.stub(),
-      destroy: sinon.stub(),
+      emit: sinon.stub(),
       on: sinon.stub()
     }
   })
@@ -231,13 +231,14 @@ describe('GrpcServerStreamingMethod', () => {
           expect(logError).to.have.been.calledWith(fakeError)
         })
 
-        it('destroys the call', async () => {
+        it('errors the call', async () => {
           await grpcMethod.exec(call)
 
-          expect(call.destroy).to.have.been.calledOnce()
+          expect(call.emit).to.have.been.calledOnce()
+          expect(call.emit).to.have.been.calledWith('error')
         })
 
-        it('sends the error with the destroy', async () => {
+        it('sends the error', async () => {
           const fakeFormatted = 'fake Error'
           grpcError.returns(fakeFormatted)
 
@@ -245,8 +246,8 @@ describe('GrpcServerStreamingMethod', () => {
 
           expect(grpcError).to.have.been.calledOnce()
           expect(grpcError).to.have.been.calledWith(fakeError)
-          expect(call.destroy).to.have.been.calledOnce()
-          expect(call.destroy).to.have.been.calledWith(fakeFormatted)
+          expect(call.emit).to.have.been.calledOnce()
+          expect(call.emit).to.have.been.calledWith('error', fakeFormatted)
         })
 
         it('includes metadata with the error', async () => {
@@ -275,15 +276,16 @@ describe('GrpcServerStreamingMethod', () => {
           expect(logError).to.have.been.calledWith(fakeError)
         })
 
-        it('destroys the call', async () => {
+        it('errors the call', async () => {
           grpcMethod.exec(call)
 
           await delay(20)
 
-          expect(call.destroy).to.have.been.calledOnce()
+          expect(call.emit).to.have.been.calledOnce()
+          expect(call.emit).to.have.been.calledWith('error')
         })
 
-        it('sends the error with the destroy', async () => {
+        it('sends the error', async () => {
           const fakeFormatted = 'fake Error'
           grpcError.returns(fakeFormatted)
 
@@ -293,8 +295,8 @@ describe('GrpcServerStreamingMethod', () => {
 
           expect(grpcError).to.have.been.calledOnce()
           expect(grpcError).to.have.been.calledWith(fakeError)
-          expect(call.destroy).to.have.been.calledOnce()
-          expect(call.destroy).to.have.been.calledWith(fakeFormatted)
+          expect(call.emit).to.have.been.calledOnce()
+          expect(call.emit).to.have.been.calledWith('error', fakeFormatted)
         })
 
         it('includes metadata with the error', async () => {

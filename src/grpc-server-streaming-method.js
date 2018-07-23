@@ -61,7 +61,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     } catch (e) {
       this.logError(e)
 
-      call.destroy(this.grpcError(e, { metadata: responseMetadata }))
+      call.emit('error', this.grpcError(e, { metadata: responseMetadata }))
     }
   }
 

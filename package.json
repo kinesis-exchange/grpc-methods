@@ -1,6 +1,6 @@
 {
   "name": "grpc-methods",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Method wrappers for Grpc to include logging and promises",
   "main": "src/index.js",
   "scripts": {
