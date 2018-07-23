@@ -61,6 +61,9 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     } catch (e) {
       this.logError(e)
 
+      // Normal writable streams would use .destroy, but gRPC writable
+      // streams use .emit('error')
+      // see: https://github.com/grpc/grpc-node/issues/287
       call.emit('error', this.grpcError(e, { metadata: responseMetadata }))
     }
   }
