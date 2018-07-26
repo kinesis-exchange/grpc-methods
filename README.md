@@ -1,4 +1,9 @@
-# Grpc Methods
+<img src="https://sparkswap.com/img/logo.svg" alt="sparkswap - sparkswap.com" width="400">
+
+[![CircleCI](https://circleci.com/gh/sparkswap/grpc-methods.svg?style=svg)](https://circleci.com/gh/sparkswap/grpc-methods)
+
+Grpc Methods
+============
 
 Make writing Grpc Methods fun by using these handy wrappers
 
