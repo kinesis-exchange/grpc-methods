@@ -57,6 +57,7 @@ class GrpcUnaryMethod extends GrpcMethod {
       return sendUnaryData(null, response, this.metadata(responseMetadata))
     } catch (err) {
       this.logError(err)
+      this.logError('What the fuck')
 
       // sendUnaryData expects a callback-like signature, so we put the error in the first parameter
       return sendUnaryData(this.grpcError(err), null, this.metadata(responseMetadata))
