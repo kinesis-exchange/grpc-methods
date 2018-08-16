@@ -1,0 +1,6 @@
+v0.6.2 - dannypaz
+
+- Added authentication to grpc unary calls to allow the user to check metadata credentials BEFORE a route is submitted. This
+allows methods to remove authentication properties and have a single point to check if a user is authorized for the request.
+- Added Contributions file
+- Added Changelog

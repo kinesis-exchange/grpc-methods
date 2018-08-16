@@ -29,7 +29,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     try {
       this.logRequestStart()
 
-      const { method, logger, requestOptions } = this
+      const { method, auth, logger, requestOptions } = this
 
       request = {
         params: call.request,
@@ -52,6 +52,12 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         this.logError(e)
         this.logRequestEnd()
       })
+
+      if (auth) {
+        logger.debug('Authenticating GRPC Request')
+        await auth(request)
+        logger.debug('Finished Authenticating GRPC Request')
+      }
 
       await method(request, this.responses, responseMetadata)
 

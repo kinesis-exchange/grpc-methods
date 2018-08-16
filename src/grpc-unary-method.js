@@ -28,7 +28,7 @@ class GrpcUnaryMethod extends GrpcMethod {
     try {
       this.logRequestStart()
 
-      const { method, logger, requestOptions } = this
+      const { method, auth, logger, requestOptions } = this
 
       /**
        * Request for the method
@@ -42,6 +42,12 @@ class GrpcUnaryMethod extends GrpcMethod {
       }
 
       this.logRequestParams(request.params)
+
+      if (auth) {
+        logger.debug('Authenticating GRPC Request')
+        await auth(request)
+        logger.debug('Finished Authenticating GRPC Request')
+      }
 
       const response = await method(request, this.responses, responseMetadata)
 
