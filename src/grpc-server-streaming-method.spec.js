@@ -23,6 +23,7 @@ describe('GrpcServerStreamingMethod', () => {
   let metadataStub
   let metadata
   let metadataContents
+  let auth
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -36,10 +37,12 @@ describe('GrpcServerStreamingMethod', () => {
     logError = sinon.stub(GrpcServerStreamingMethod.prototype, 'logError')
     grpcError = sinon.stub(GrpcServerStreamingMethod.prototype, 'grpcError')
     metadataStub = sinon.stub(GrpcServerStreamingMethod.prototype, 'metadata')
+    auth = sinon.stub().resolves(true)
 
     logger = {
       error: sinon.stub(),
-      info: sinon.stub()
+      info: sinon.stub(),
+      debug: sinon.stub()
     }
 
     responses = {
@@ -76,73 +79,73 @@ describe('GrpcServerStreamingMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, ...requestOptions }, responses, auth)
     })
 
-    it('logs the start of the request', () => {
-      grpcMethod.exec(call)
+    it('logs the start of the request', async () => {
+      await grpcMethod.exec(call)
       expect(logRequestStart).to.have.been.calledOnce()
       expect(logRequestStart).to.have.been.calledBefore(method)
     })
 
-    it('logs request params', () => {
-      grpcMethod.exec(call)
+    it('logs request params', async () => {
+      await grpcMethod.exec(call)
       expect(logRequestParams).to.have.been.calledOnce()
       expect(logRequestParams).to.have.been.calledBefore(method)
       expect(logRequestParams).to.have.been.calledWith(call.request)
     })
 
-    it('calls the assigned method', () => {
-      grpcMethod.exec(call)
+    it('calls the assigned method', async () => {
+      await grpcMethod.exec(call)
       expect(method).to.have.been.calledOnce()
     })
 
     describe('request', () => {
-      it('provides a request object to the method', () => {
-        grpcMethod.exec(call)
+      it('provides a request object to the method', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match.object)
       })
 
-      it('provides the params of the call', () => {
-        grpcMethod.exec(call)
+      it('provides the params of the call', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ params: call.request }))
       })
 
-      it('provides a logger for the method', () => {
-        grpcMethod.exec(call)
+      it('provides a logger for the method', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ logger }))
       })
 
-      it('includes the request options', () => {
-        grpcMethod.exec(call)
+      it('includes the request options', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match(requestOptions))
       })
 
-      it('includes a send function', () => {
-        grpcMethod.exec(call)
+      it('includes a send function', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ send: sinon.match.func }))
       })
 
-      it('binds the send function to the current context', () => {
+      it('binds the send function to the current context', async () => {
         grpcMethod.send = sinon.stub()
-        grpcMethod.exec(call)
+        await grpcMethod.exec(call)
         const request = method.args[0][0]
         request.send()
         expect(grpcMethod.send).to.have.been.calledOnce()
         expect(grpcMethod.send).to.have.been.calledOn(grpcMethod)
       })
 
-      it('includes an onCancel function', () => {
-        grpcMethod.exec(call)
+      it('includes an onCancel function', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ send: sinon.match.func }))
       })
 
-      it('sets onCancel to the cancelled handler', () => {
+      it('sets onCancel to the cancelled handler', async () => {
         const fakeListener = function () {
           return 'myfake'
         }
 
-        grpcMethod.exec(call)
+        await grpcMethod.exec(call)
         const request = method.args[0][0]
 
         request.onCancel(fakeListener)
@@ -150,17 +153,17 @@ describe('GrpcServerStreamingMethod', () => {
         expect(call.on).to.have.been.calledWith('cancelled', fakeListener)
       })
 
-      it('includes an onError function', () => {
-        grpcMethod.exec(call)
+      it('includes an onError function', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ send: sinon.match.func }))
       })
 
-      it('sets onError to the cancelled handler', () => {
+      it('sets onError to the cancelled handler', async () => {
         const fakeListener = function () {
           return 'myfake'
         }
 
-        grpcMethod.exec(call)
+        await grpcMethod.exec(call)
         const request = method.args[0][0]
 
         request.onError(fakeListener)
@@ -168,19 +171,30 @@ describe('GrpcServerStreamingMethod', () => {
         expect(call.on).to.have.been.calledWith('error', fakeListener)
       })
 
-      it('includes the client metadata', () => {
-        grpcMethod.exec(call)
+      it('includes the client metadata', async () => {
+        await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ metadata: metadataContents }))
       })
     })
 
-    it('provides the responses to the method', () => {
-      grpcMethod.exec(call)
+    it('calls an authorization function if present', async () => {
+      await grpcMethod.exec(call)
+      expect(auth).to.have.been.calledOnce()
+    })
+
+    it('skips auth if auth parameter is null', async () => {
+      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, ...requestOptions }, responses)
+      await grpcMethod.exec(call)
+      expect(auth).to.not.have.been.calledOnce()
+    })
+
+    it('provides the responses to the method', async () => {
+      await grpcMethod.exec(call)
       expect(method).to.have.been.calledWith(sinon.match.any, sinon.match(responses))
     })
 
-    it('provides a response metadata object to be modified', () => {
-      grpcMethod.exec(call)
+    it('provides a response metadata object to be modified', async () => {
+      await grpcMethod.exec(call)
       expect(method).to.have.been.calledWith(sinon.match.any, sinon.match.any, {})
     })
 
