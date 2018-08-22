@@ -29,9 +29,10 @@ class GrpcMethod {
    * @param  {Object} options.logger Logger to be used by the method
    * @param  {*} options.* additional parameters to be included in each request object
    * @param  {Object} responses Response constructors to pass to the method
+   * @param  {GrpcMethod~method} auth method called before request
    * @return {GrpcMethod}
    */
-  constructor (method, messageId = '', { logger = console, ...requestOptions } = {}, responses = {}) {
+  constructor (method, messageId = '', { logger = console, ...requestOptions } = {}, responses = {}, auth = null) {
     // Method definition
     this.method = method
 
@@ -44,6 +45,9 @@ class GrpcMethod {
 
     // Response constructors
     this.responses = responses
+
+    // Authentication middleware definition
+    this.auth = auth
   }
 
   /**

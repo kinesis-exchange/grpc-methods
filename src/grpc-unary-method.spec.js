@@ -23,6 +23,7 @@ describe('GrpcUnaryMethod', () => {
   let messageId
   let metadata
   let metadataContents
+  let auth
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -35,10 +36,12 @@ describe('GrpcUnaryMethod', () => {
     logError = sinon.stub(GrpcUnaryMethod.prototype, 'logError')
     metadataStub = sinon.stub(GrpcUnaryMethod.prototype, 'metadata')
     grpcError = sinon.stub(GrpcUnaryMethod.prototype, 'grpcError')
+    auth = sinon.stub().resolves(true)
 
     logger = {
       error: sinon.stub(),
-      info: sinon.stub()
+      info: sinon.stub(),
+      debug: sinon.stub()
     }
 
     responses = {
@@ -71,7 +74,7 @@ describe('GrpcUnaryMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, ...requestOptions }, responses, auth)
     })
 
     it('logs the start of the request', () => {
@@ -87,8 +90,8 @@ describe('GrpcUnaryMethod', () => {
       expect(logRequestParams).to.have.been.calledWith(call.request)
     })
 
-    it('calls the assigned method', () => {
-      grpcMethod.exec(call, sendUnaryData)
+    it('calls the assigned method', async () => {
+      await grpcMethod.exec(call, sendUnaryData)
       expect(method).to.have.been.calledOnce()
     })
 
@@ -99,34 +102,45 @@ describe('GrpcUnaryMethod', () => {
         requestStub = Object.assign({}, { params: call.request, logger }, requestOptions)
       })
 
-      it('provides a request object to the method', () => {
-        grpcMethod.exec(call, sendUnaryData)
+      it('provides a request object to the method', async () => {
+        await grpcMethod.exec(call, sendUnaryData)
         expect(method).to.have.been.calledWith(sinon.match(requestStub))
       })
 
-      it('provides the params of the call', () => {
-        grpcMethod.exec(call, sendUnaryData)
+      it('provides the params of the call', async () => {
+        await grpcMethod.exec(call, sendUnaryData)
         expect(method).to.have.been.calledWith(sinon.match({ params: call.request }))
       })
 
-      it('provides a logger for the method', () => {
-        grpcMethod.exec(call, sendUnaryData)
+      it('provides a logger for the method', async () => {
+        await grpcMethod.exec(call, sendUnaryData)
         expect(method).to.have.been.calledWith(sinon.match({ logger }))
       })
 
-      it('provides the client metadata', () => {
-        grpcMethod.exec(call, sendUnaryData)
+      it('provides the client metadata', async () => {
+        await grpcMethod.exec(call, sendUnaryData)
         expect(method).to.have.been.calledWith(sinon.match({ metadata: metadataContents }))
       })
     })
 
-    it('provides the responses to the method', () => {
+    it('calls an authorization function if present', () => {
       grpcMethod.exec(call, sendUnaryData)
+      expect(auth).to.have.been.calledOnce()
+    })
+
+    it('skips auth if auth parameter is null', () => {
+      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod.exec(call, sendUnaryData)
+      expect(auth).to.not.have.been.calledOnce()
+    })
+
+    it('provides the responses to the method', async () => {
+      await grpcMethod.exec(call, sendUnaryData)
       expect(method).to.have.been.calledWith(sinon.match.any, sinon.match(responses))
     })
 
-    it('provides a response metadata object modify', () => {
-      grpcMethod.exec(call, sendUnaryData)
+    it('provides a response metadata object modify', async () => {
+      await grpcMethod.exec(call, sendUnaryData)
       expect(method).to.have.been.calledWith(sinon.match.any, sinon.match.any, {})
     })
 

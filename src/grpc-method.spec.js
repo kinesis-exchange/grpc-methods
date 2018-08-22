@@ -17,6 +17,7 @@ describe('GrpcMethod', () => {
   let logger
   let responses
   let messageId
+  let auth
 
   beforeEach(() => {
     PublicError = sinon.stub()
@@ -40,6 +41,7 @@ describe('GrpcMethod', () => {
     requestOptions = {
       fake: 'opts'
     }
+    auth = sinon.stub()
   })
 
   describe('new', () => {
@@ -76,6 +78,20 @@ describe('GrpcMethod', () => {
 
       expect(grpcMethod).to.have.property('requestOptions')
       expect(grpcMethod.requestOptions).to.be.eql(requestOptions)
+    })
+
+    it('assigns an authorization function if present', () => {
+      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses, auth)
+
+      expect(grpcMethod).to.have.property('auth')
+      expect(grpcMethod.auth).to.be.equal(auth)
+    })
+
+    it('assigns authorization to null', () => {
+      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+
+      expect(grpcMethod).to.have.property('auth')
+      expect(grpcMethod.auth).to.be.null()
     })
   })
 
@@ -132,7 +148,7 @@ describe('GrpcMethod', () => {
         hello: 'darkness',
         myOld: 'friend'
       }
-      
+
       grpcMethod.metadata(customMeta)
 
       expect(grpcMetadataAdd).to.have.been.calledWith('hello', 'darkness')
@@ -180,7 +196,8 @@ describe('GrpcMethod', () => {
         hello: 'darkness',
         myOld: 'friend'
       }
-      const grpcErr = grpcMethod.grpcError(err, { metadata: customMeta })
+
+      grpcMethod.grpcError(err, { metadata: customMeta })
 
       expect(grpcMetadataAdd).to.have.been.calledWith('hello', 'darkness')
       expect(grpcMetadataAdd).to.have.been.calledWith('myOld', 'friend')
