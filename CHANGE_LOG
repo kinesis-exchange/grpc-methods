@@ -1,3 +1,7 @@
+v0.6.3 - dannypaz
+
+- Update method signature of grpc-method to take in an AUTH parameter into the requestOptions hash. This changes how authentication is provided to each grpc-method handler
+
 v0.6.2 - dannypaz
 
 - Added authentication to grpc unary/streaming calls to allow the user to check metadata credentials BEFORE a route is submitted. This

@@ -32,7 +32,7 @@ class GrpcMethod {
    * @param  {GrpcMethod~method} auth method called before request
    * @return {GrpcMethod}
    */
-  constructor (method, messageId = '', { logger = console, ...requestOptions } = {}, responses = {}, auth = null) {
+  constructor (method, messageId = '', { logger = console, auth = null, ...requestOptions } = {}, responses = {}) {
     // Method definition
     this.method = method
 
