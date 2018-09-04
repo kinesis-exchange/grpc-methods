@@ -81,7 +81,7 @@ describe('GrpcMethod', () => {
     })
 
     it('assigns an authorization function if present', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses, auth)
+      const grpcMethod = new GrpcMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('auth')
       expect(grpcMethod.auth).to.be.equal(auth)

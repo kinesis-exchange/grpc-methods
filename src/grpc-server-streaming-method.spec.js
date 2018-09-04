@@ -79,7 +79,7 @@ describe('GrpcServerStreamingMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, ...requestOptions }, responses, auth)
+      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
     })
 
     it('logs the start of the request', async () => {

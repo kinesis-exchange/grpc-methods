@@ -74,7 +74,7 @@ describe('GrpcUnaryMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, ...requestOptions }, responses, auth)
+      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
     })
 
     it('logs the start of the request', () => {
