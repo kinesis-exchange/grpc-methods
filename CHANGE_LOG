@@ -1,3 +1,11 @@
+v0.6.5 - dannypaz
+
+- Version bump
+
+v0.6.4 - dannypaz
+
+- Updated grpc depenencies for security vulnerability found in protobufjs (child dep of grpc)
+
 v0.6.3 - dannypaz
 
 - Update method signature of grpc-method to take in an AUTH parameter into the requestOptions hash. This changes how authentication is provided to each grpc-method handler
