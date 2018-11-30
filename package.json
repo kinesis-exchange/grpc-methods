@@ -22,6 +22,12 @@
       "chai"
     ]
   },
+  "nyc": {
+    "exclude": [
+      "**/*.spec.js",
+      "test/"
+    ]
+  },
   "author": "",
   "license": "MIT",
   "bugs": {
