@@ -24,8 +24,7 @@
   },
   "nyc": {
     "exclude": [
-      "**/*.spec.js",
-      "test/"
+      "**/*.spec.js"
     ]
   },
   "author": "",
