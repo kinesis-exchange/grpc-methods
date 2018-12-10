@@ -20,7 +20,6 @@ describe('GrpcUnaryMethod', () => {
   let grpcError
   let logger
   let responses
-  let messageId
   let metadata
   let metadataContents
   let auth
@@ -48,8 +47,6 @@ describe('GrpcUnaryMethod', () => {
       FakeResponse: sinon.stub()
     }
 
-    messageId = '[FakeService:mymethod]'
-
     method = sinon.stub()
     requestOptions = {
       fake: 'option'
@@ -74,7 +71,7 @@ describe('GrpcUnaryMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
+      grpcMethod = new GrpcUnaryMethod(method, { logger, auth, ...requestOptions }, responses)
     })
 
     it('logs the start of the request', () => {
@@ -129,7 +126,7 @@ describe('GrpcUnaryMethod', () => {
     })
 
     it('skips auth if auth parameter is null', () => {
-      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcUnaryMethod(method, { logger, ...requestOptions }, responses)
       grpcMethod.exec(call, sendUnaryData)
       expect(auth).to.not.have.been.calledOnce()
     })

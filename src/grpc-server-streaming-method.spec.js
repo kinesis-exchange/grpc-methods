@@ -19,7 +19,6 @@ describe('GrpcServerStreamingMethod', () => {
   let grpcError
   let logger
   let responses
-  let messageId
   let metadataStub
   let metadata
   let metadataContents
@@ -49,8 +48,6 @@ describe('GrpcServerStreamingMethod', () => {
       FakeResponse: sinon.stub()
     }
 
-    messageId = '[FakeService:mymethod]'
-
     method = sinon.stub()
     requestOptions = {
       fake: 'option'
@@ -79,7 +76,7 @@ describe('GrpcServerStreamingMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
+      grpcMethod = new GrpcServerStreamingMethod(method, { logger, auth, ...requestOptions }, responses)
     })
 
     it('logs the start of the request', async () => {
@@ -183,7 +180,7 @@ describe('GrpcServerStreamingMethod', () => {
     })
 
     it('skips auth if auth parameter is null', async () => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcServerStreamingMethod(method, { logger, ...requestOptions }, responses)
       await grpcMethod.exec(call)
       expect(auth).to.not.have.been.calledOnce()
     })
@@ -359,7 +356,7 @@ describe('GrpcServerStreamingMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, requestOptions)
+      grpcMethod = new GrpcServerStreamingMethod(method, requestOptions)
     })
 
     it('logs data that is sent', () => {

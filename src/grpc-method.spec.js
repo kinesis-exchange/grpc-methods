@@ -16,7 +16,6 @@ describe('GrpcMethod', () => {
   let requestOptions
   let logger
   let responses
-  let messageId
   let auth
 
   beforeEach(() => {
@@ -35,7 +34,6 @@ describe('GrpcMethod', () => {
     responses = {
       FakeResponse: sinon.stub()
     }
-    messageId = '[FakeService:mymethod]'
 
     method = sinon.stub()
     requestOptions = {
@@ -46,49 +44,42 @@ describe('GrpcMethod', () => {
 
   describe('new', () => {
     it('assigns the method', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('method')
       expect(grpcMethod.method).to.be.equal(method)
     })
 
-    it('assigns the message id', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
-
-      expect(grpcMethod).to.have.property('messageId')
-      expect(grpcMethod.messageId).to.be.equal(messageId)
-    })
-
     it('aliases the service logger', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('logger')
       expect(grpcMethod.logger).to.be.equal(logger)
     })
 
     it('aliases the object of responses', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('responses')
       expect(grpcMethod.responses).to.be.equal(responses)
     })
 
     it('assigns the request options', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('requestOptions')
       expect(grpcMethod.requestOptions).to.be.eql(requestOptions)
     })
 
     it('assigns an authorization function if present', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, auth, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('auth')
       expect(grpcMethod.auth).to.be.equal(auth)
     })
 
     it('assigns authorization to null', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('auth')
       expect(grpcMethod.auth).to.be.null()
@@ -97,7 +88,7 @@ describe('GrpcMethod', () => {
 
   describe('#exec', () => {
     it('throws the unimplemented exec', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       expect(grpcMethod.exec).to.throw()
     })
@@ -105,7 +96,7 @@ describe('GrpcMethod', () => {
 
   describe('#register', () => {
     it('binds exec to the GrpcMethod context', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
 
       grpcMethod.exec = sinon.stub()
 
@@ -122,7 +113,7 @@ describe('GrpcMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
     })
 
     it('creates grpc metadata', () => {
@@ -160,7 +151,7 @@ describe('GrpcMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcMethod(method, { logger, ...requestOptions }, responses)
     })
 
     it('creates a grpc-compliant error object', () => {
