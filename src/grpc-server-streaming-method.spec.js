@@ -64,14 +64,15 @@ describe('GrpcServerStreamingMethod', () => {
       }
     }
 
-    // TODO: is this actually what GRPC exposes?
+    // Call definition https://grpc.io/grpc/node/grpc-ClientWritableStream.html
     call = {
       request: 'fake request',
       metadata,
       write: sinon.stub(),
       end: sinon.stub(),
       emit: sinon.stub(),
-      on: sinon.stub()
+      on: sinon.stub(),
+      getPeer: () => 'ipaddress'
     }
   })
 
@@ -350,6 +351,31 @@ describe('GrpcServerStreamingMethod', () => {
 
         await delay(20)
 
+        expect(logRequestEnd).to.have.been.calledOnce()
+      })
+    })
+
+    describe('error', () => {
+      beforeEach(() => {
+        // want this promise to never resolve
+        method.returns(new Promise(() => {}))
+        call.on.callsFake(async (evt, cb) => {
+          if (evt === 'error') {
+            await delay(20)
+            cb()
+          }
+        })
+      })
+
+      it('logs an error on client error', async () => {
+        grpcMethod.exec(call)
+        await delay(20)
+        expect(logError).to.have.been.calledOnce()
+      })
+
+      it('logs request end on client error', async () => {
+        grpcMethod.exec(call)
+        await delay(20)
         expect(logRequestEnd).to.have.been.calledOnce()
       })
     })

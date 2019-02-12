@@ -63,9 +63,11 @@ describe('GrpcUnaryMethod', () => {
       }
     }
 
+    // Call definition https://grpc.io/grpc/node/grpc-ClientUnaryCall.html
     call = {
       request: 'fake request',
-      metadata
+      metadata,
+      getPeer: () => 'ipaddress'
     }
     sendUnaryData = sinon.stub()
   })

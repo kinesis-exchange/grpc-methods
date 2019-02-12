@@ -37,7 +37,10 @@ class GrpcUnaryMethod extends GrpcMethod {
       request = {
         params: call.request,
         logger,
-        metadata: call.metadata.getMap(),
+        metadata: {
+          ...call.metadata.getMap(),
+          ipAddress: call.getPeer()
+        },
         ...requestOptions
       }
 
