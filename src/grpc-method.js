@@ -23,18 +23,22 @@ class GrpcMethod {
   /**
    * Creates a Grpc method wrapper
    *
-   * @param  {GrpcMethod~method} method Method to be wrapped and called during execution
-   * @param  {string} messageId Identifier for log messages and public messages. Typically `[${serviceName}:${methodName}]`
-   * @param  {Object} options
-   * @param  {Object} options.logger Logger to be used by the method
-   * @param  {*} options.* additional parameters to be included in each request object
-   * @param  {Object} responses Response constructors to pass to the method
-   * @param  {GrpcMethod~method} auth method called before request
+   * @param  {GrpcMethod~method} method - Method to be wrapped and called during execution
+   * @param  {string}            messageId - Identifier for log messages and public messages. Typically `[${serviceName}:${methodName}]`
+   * @param  {Object}            options
+   * @param  {boolean}           options.privateErrors - Whether the errors thrown when running this method should have their messages returned to the user by default.
+   * @param  {Object}            options.logger - Logger to be used by the method
+   * @param  {*}                 options.* - additional parameters to be included in each request object
+   * @param  {Object}            responses - Response constructors to pass to the method
+   * @param  {GrpcMethod~method} auth - method called before request
    * @return {GrpcMethod}
    */
-  constructor (method, messageId = '', { logger = console, auth = null, ...requestOptions } = {}, responses = {}) {
+  constructor (method, messageId = '', { privateErrors = false, logger = console, auth = null, ...requestOptions } = {}, responses = {}) {
     // Method definition
     this.method = method
+
+    // whether errors thrown in the method should be private (i.e. not returned to the caller)
+    this.privateErrors = privateErrors
 
     // Logger helper
     this.messageId = messageId
@@ -101,7 +105,9 @@ class GrpcMethod {
   grpcError (err, { metadata = {}, status = grpc.status.INTERNAL } = {}) {
     let message = `Call terminated before completion`
 
-    if (err instanceof PublicError) {
+    // if the error is marked as public, or if this method is publicizing
+    // errors by default, we should include the message
+    if (!this.privateErrors || err instanceof PublicError) {
       message = err.message
     }
 
