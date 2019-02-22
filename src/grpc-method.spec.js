@@ -20,8 +20,7 @@ describe('GrpcMethod', () => {
   let auth
 
   beforeEach(() => {
-    PublicError = sinon.stub()
-    GrpcMethod.__set__('PublicError', PublicError)
+    PublicError = GrpcMethod.__get__('PublicError')
 
     grpcMetadata = sinon.stub()
     grpcMetadataAdd = sinon.stub()
@@ -92,6 +91,18 @@ describe('GrpcMethod', () => {
 
       expect(grpcMethod).to.have.property('auth')
       expect(grpcMethod.auth).to.be.null()
+    })
+
+    it('marks errors public by default', () => {
+      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+
+      expect(grpcMethod).to.have.property('privateErrors', false)
+    })
+
+    it('marks errors  private if specified', () => {
+      const grpcMethod = new GrpcMethod(method, messageId, { privateErrors: true, logger, ...requestOptions }, responses)
+
+      expect(grpcMethod).to.have.property('privateErrors', true)
     })
   })
 
@@ -203,8 +214,29 @@ describe('GrpcMethod', () => {
       expect(grpcMetadataAdd).to.have.been.calledWith('myOld', 'friend')
     })
 
-    xit('defaults the error message')
+    it('makes error messages public by default', () => {
+      const err = new Error('fake error')
+      const grpcErr = grpcMethod.grpcError(err)
 
-    xit('it uses the error message for public errors')
+      expect(grpcErr.message).to.include('fake error')
+    })
+
+    it('makes error message private if the method has private errors', () => {
+      grpcMethod.privateErrors = true
+
+      const err = new Error('fake error')
+      const grpcErr = grpcMethod.grpcError(err)
+
+      expect(grpcErr.message).to.include('Call terminated before completion')
+    })
+
+    it('makes error messages public if they are PublicErrors', () => {
+      grpcMethod.privateErrors = true
+
+      const err = new PublicError('fake error')
+      const grpcErr = grpcMethod.grpcError(err)
+
+      expect(grpcErr.message).to.include('fake error')      
+    })
   })
 })

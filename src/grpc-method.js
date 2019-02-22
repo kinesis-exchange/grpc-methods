@@ -32,9 +32,12 @@ class GrpcMethod {
    * @param  {GrpcMethod~method} auth method called before request
    * @return {GrpcMethod}
    */
-  constructor (method, messageId = '', { logger = console, auth = null, ...requestOptions } = {}, responses = {}) {
+  constructor (method, messageId = '', { privateErrors = false, logger = console, auth = null, ...requestOptions } = {}, responses = {}) {
     // Method definition
     this.method = method
+
+    // whether errors thrown in the method should be private (i.e. not returned to the caller)
+    this.privateErrors = privateErrors
 
     // Logger helper
     this.messageId = messageId
@@ -101,7 +104,9 @@ class GrpcMethod {
   grpcError (err, { metadata = {}, status = grpc.status.INTERNAL } = {}) {
     let message = `Call terminated before completion`
 
-    if (err instanceof PublicError) {
+    // if the error is marked as public, or if this method is publicizing
+    // errors by default, we should include the message
+    if (!this.privateErrors || err instanceof PublicError) {
       message = err.message
     }
 
