@@ -1,3 +1,7 @@
+v0.7.0 - treygriffith
+
+- Make error messages public by default and add an option to make them private
+
 v0.6.5 - dannypaz
 
 - Version bump
