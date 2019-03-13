@@ -28,7 +28,7 @@ class GrpcUnaryMethod extends GrpcMethod {
     try {
       this.logRequestStart()
 
-      const { method, auth, logger, requestOptions } = this
+      const { method, auth, logger, requestId, requestOptions } = this
 
       /**
        * Request for the method
@@ -38,6 +38,7 @@ class GrpcUnaryMethod extends GrpcMethod {
         params: call.request,
         logger,
         metadata: call.metadata.getMap(),
+        requestId,
         ...requestOptions
       }
 
