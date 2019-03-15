@@ -1,4 +1,5 @@
 const GrpcMethod = require('./grpc-method')
+const generateId = require('./generate-id')
 
 /**
  * @class Wrapper for Server-streaming Grpc Methods
@@ -29,7 +30,10 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     try {
       this.logRequestStart()
 
-      const { method, auth, logger, requestOptions } = this
+      const { method, auth, createLogger, requestOptions } = this
+
+      const requestId = generateId()
+      const logger = createLogger({ messageId: this.messageId, requestId })
 
       request = {
         params: call.request,

@@ -1,5 +1,5 @@
 const GrpcMethod = require('./grpc-method')
-
+const generateId = require('./generate-id')
 /**
  * @class Creates a wrapper for Grpc Unary method
  * @extends {GrpcMethod}
@@ -28,8 +28,10 @@ class GrpcUnaryMethod extends GrpcMethod {
     try {
       this.logRequestStart()
 
-      const { method, auth, logger, requestId, requestOptions } = this
+      const { method, auth, createLogger, requestOptions } = this
+      const requestId = generateId()
 
+      const logger = createLogger({ messageId: this.messageId, requestId })
       /**
        * Request for the method
        * @type {GrpcUnaryMethod~request}

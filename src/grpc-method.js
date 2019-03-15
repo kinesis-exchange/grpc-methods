@@ -1,6 +1,5 @@
 const grpc = require('grpc')
 const { PublicError } = require('./errors')
-const generateId = require('./generate-id')
 
 /**
  * Abstract class for creating Grpc method wrappers
@@ -34,7 +33,7 @@ class GrpcMethod {
    * @param  {GrpcMethod~method} auth - method called before request
    * @return {GrpcMethod}
    */
-  constructor (method, messageId = '', { privateErrors = false, logger = console, auth = null, requestId = generateId(), ...requestOptions } = {}, responses = {}) {
+  constructor (method, messageId = '', { privateErrors = false, createLogger = (() => console), auth = null, ...requestOptions } = {}, responses = {}) {
     // Method definition
     this.method = method
 
@@ -44,8 +43,9 @@ class GrpcMethod {
     // Logger helper
     this.messageId = messageId
 
+    this.createLogger = createLogger
+
     // Options to include in every request object
-    this.logger = logger
     this.requestOptions = requestOptions
 
     // Response constructors
@@ -53,8 +53,6 @@ class GrpcMethod {
 
     // Authentication middleware definition
     this.auth = auth
-
-    this.requestId = requestId
   }
 
   /**
