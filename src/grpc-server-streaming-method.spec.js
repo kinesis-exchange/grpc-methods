@@ -24,6 +24,7 @@ describe('GrpcServerStreamingMethod', () => {
   let metadata
   let metadataContents
   let auth
+  let createLogger
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -64,9 +65,11 @@ describe('GrpcServerStreamingMethod', () => {
       }
     }
 
+    createLogger = sinon.stub().returns(logger)
+
     // TODO: is this actually what GRPC exposes?
     call = {
-      request: 'fake request',
+      request: { params: 'fake request', logger },
       metadata,
       write: sinon.stub(),
       end: sinon.stub(),
@@ -79,12 +82,13 @@ describe('GrpcServerStreamingMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
+      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { createLogger, auth, ...requestOptions }, responses)
     })
 
     it('logs the start of the request', async () => {
       await grpcMethod.exec(call)
       expect(logRequestStart).to.have.been.calledOnce()
+      expect(logRequestStart).to.have.been.calledWith(logger)
       expect(logRequestStart).to.have.been.calledBefore(method)
     })
 
@@ -92,7 +96,7 @@ describe('GrpcServerStreamingMethod', () => {
       await grpcMethod.exec(call)
       expect(logRequestParams).to.have.been.calledOnce()
       expect(logRequestParams).to.have.been.calledBefore(method)
-      expect(logRequestParams).to.have.been.calledWith(call.request)
+      expect(logRequestParams).to.have.been.calledWith(logger, call.request)
     })
 
     it('calls the assigned method', async () => {
@@ -183,7 +187,7 @@ describe('GrpcServerStreamingMethod', () => {
     })
 
     it('skips auth if auth parameter is null', async () => {
-      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcServerStreamingMethod(method, messageId, { createLogger, ...requestOptions }, responses)
       await grpcMethod.exec(call)
       expect(auth).to.not.have.been.calledOnce()
     })
@@ -206,6 +210,7 @@ describe('GrpcServerStreamingMethod', () => {
       it('logs the request end', async () => {
         await grpcMethod.exec(call)
         expect(logRequestEnd).to.have.been.calledOnce()
+        expect(logRequestEnd).to.have.been.calledWith(logger)
       })
 
       it('ends the server stream', async () => {
@@ -242,7 +247,7 @@ describe('GrpcServerStreamingMethod', () => {
           await grpcMethod.exec(call)
 
           expect(logError).to.have.been.calledOnce()
-          expect(logError).to.have.been.calledWith(fakeError)
+          expect(logError).to.have.been.calledWith(logger, fakeError)
         })
 
         it('errors the call', async () => {
@@ -287,7 +292,7 @@ describe('GrpcServerStreamingMethod', () => {
           await delay(20)
 
           expect(logError).to.have.been.calledOnce()
-          expect(logError).to.have.been.calledWith(fakeError)
+          expect(logError).to.have.been.calledWith(logger, fakeError)
         })
 
         it('errors the call', async () => {
@@ -343,6 +348,7 @@ describe('GrpcServerStreamingMethod', () => {
         await delay(20)
 
         expect(logRequestCancel).to.have.been.calledOnce()
+        expect(logRequestCancel).to.have.been.calledWith(logger)
       })
 
       it('logs request end on client cancel', async () => {
@@ -351,6 +357,7 @@ describe('GrpcServerStreamingMethod', () => {
         await delay(20)
 
         expect(logRequestEnd).to.have.been.calledOnce()
+        expect(logRequestEnd).to.have.been.calledWith(logger)
       })
     })
   })
@@ -364,15 +371,15 @@ describe('GrpcServerStreamingMethod', () => {
 
     it('logs data that is sent', () => {
       const fakeData = 'fake'
-      grpcMethod.send(call, fakeData)
+      grpcMethod.send(call, logger, fakeData)
 
       expect(logResponse).to.have.been.calledOnce()
-      expect(logResponse).to.have.been.calledWith(fakeData)
+      expect(logResponse).to.have.been.calledWith(logger, fakeData)
     })
 
     it('writes sent data to the server stream', () => {
       const fakeData = 'fake'
-      grpcMethod.send(call, fakeData)
+      grpcMethod.send(call, logger, fakeData)
 
       expect(call.write).to.have.been.calledOnce()
       expect(call.write).to.have.been.calledWith(fakeData)

@@ -27,7 +27,7 @@ class GrpcMethod {
    * @param  {string}            messageId - Identifier for log messages and public messages. Typically `[${serviceName}:${methodName}]`
    * @param  {Object}            options
    * @param  {boolean}           options.privateErrors - Whether the errors thrown when running this method should have their messages returned to the user by default.
-   * @param  {Object}            options.logger - Logger to be used by the method
+   * @param  {Object}            options.createLogger - function that when called returns logger
    * @param  {*}                 options.* - additional parameters to be included in each request object
    * @param  {Object}            responses - Response constructors to pass to the method
    * @param  {GrpcMethod~method} auth - method called before request
@@ -43,6 +43,7 @@ class GrpcMethod {
     // Logger helper
     this.messageId = messageId
 
+    // function to create logger
     this.createLogger = createLogger
 
     // Options to include in every request object
@@ -121,61 +122,66 @@ class GrpcMethod {
 
   /**
    * Log the start of a request
-   *
+   * @param {Object} logger Logger to be used by the method
    * @return {void}
    */
-  logRequestStart () {
-    this.logger.info(`Request received: ${this.messageId}`)
+  logRequestStart (logger) {
+    logger.info(`Request received: ${this.messageId}`)
   }
 
   /**
    * Log the parameters of a request
    *
+   * @param {Object} logger Logger to be used by the method
    * @param  {Object} parameters of the request
    * @return {void}
    */
-  logRequestParams (params) {
-    this.logger.debug(`Request made with payload: ${this.messageId}`, params)
+  logRequestParams (logger, params) {
+    logger.debug(`Request made with payload: ${this.messageId}`, params)
   }
 
   /**
    * Log client cancellation of a request
    *
+   * @param {Object} logger Logger to be used by the method
    * @return {void}
    */
-  logRequestCancel () {
-    this.logger.info(`Request cancelled by client: ${this.messageId}`)
+  logRequestCancel (logger) {
+    logger.info(`Request cancelled by client: ${this.messageId}`)
   }
 
   /**
    * Log completion (successful or otherwise) of a request
    *
+   * @param {Object} logger Logger to be used by the method
    * @return {void}
    */
-  logRequestEnd () {
-    this.logger.info(`Request completed: ${this.messageId}`)
+  logRequestEnd (logger) {
+    logger.info(`Request completed: ${this.messageId}`)
   }
 
   /**
    * Log data that will be sent to the client
    *
+   * @param {Object} logger Logger to be used by the method
    * @param  {Object} data
    * @return {void}
    */
-  logResponse (data) {
-    this.logger.info(`Response generated: ${this.messageId}`)
-    this.logger.debug(`Responding with payload: ${this.messageId}`, data)
+  logResponse (logger, data) {
+    logger.info(`Response generated: ${this.messageId}`)
+    logger.debug(`Responding with payload: ${this.messageId}`, data)
   }
 
   /**
    * Log errors generated while handling request
    *
+   * @param {Object} logger Logger to be used by the method
    * @param  {error} err
    * @return {void}
    */
-  logError (err) {
-    this.logger.error(`Error while handling request: ${this.messageId}`)
-    this.logger.error(err.stack)
+  logError (logger, err) {
+    logger.error(`Error while handling request: ${this.messageId}`)
+    logger.error(err.stack)
   }
 }
 

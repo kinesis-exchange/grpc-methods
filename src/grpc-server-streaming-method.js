@@ -28,33 +28,37 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     let request
 
     try {
-      // this.logRequestStart()
-
       const { method, auth, createLogger, requestOptions } = this
 
-      const requestId = generateId()
+      // generate unique id to be associated with the request
+      const requestId = generateId(6)
+
+      // create the logger with the requestId and messageid
       const logger = createLogger({ messageId: this.messageId, requestId })
+
+      this.logRequestStart(logger)
 
       request = {
         params: call.request,
-        logger: logger,
-        send: this.send.bind(this, call),
+        logger,
+        send: this.send.bind(this, call, logger),
         onCancel: (fn) => { call.on('cancelled', fn) },
         onError: (fn) => { call.on('error', fn) },
         metadata: call.metadata.getMap(),
+        requestId,
         ...requestOptions
       }
 
-      // this.logRequestParams(request.params)
+      this.logRequestParams(request.logger, request.params)
 
       call.on('cancelled', () => {
-        // this.logRequestCancel()
-        // this.logRequestEnd()
+        this.logRequestCancel(request.logger)
+        this.logRequestEnd(request.logger)
       })
 
       call.on('error', (e) => {
-        // this.logError(e)
-        // this.logRequestEnd()
+        this.logError(request.logger, e)
+        this.logRequestEnd(request.logger)
       })
 
       if (auth) {
@@ -65,11 +69,11 @@ class GrpcServerStreamingMethod extends GrpcMethod {
 
       await method(request, this.responses, responseMetadata)
 
-      // this.logRequestEnd()
+      this.logRequestEnd(request.logger)
 
       call.end(this.metadata(responseMetadata))
     } catch (e) {
-      this.logError(e)
+      this.logError(request.logger, e)
 
       // Normal writable streams would use .destroy, but gRPC writable
       // streams use .emit('error')
@@ -85,8 +89,8 @@ class GrpcServerStreamingMethod extends GrpcMethod {
    * @param  {Object} data payload to send to the client
    * @return {void}
    */
-  send (call, data) {
-    // this.logResponse(data)
+  send (call, logger, data) {
+    this.logResponse(logger, data)
     call.write(data)
   }
 }
