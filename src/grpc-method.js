@@ -24,7 +24,7 @@ class GrpcMethod {
    * Creates a Grpc method wrapper
    *
    * @param  {GrpcMethod~method} method - Method to be wrapped and called during execution
-   * @param  {string}            messageId - Identifier for log messages and public messages. Typically `[${serviceName}:${methodName}]`
+   * @param  {string}            messageId - Identifier for log messages and public messages. Typically '[${serviceName}:${methodName}]'
    * @param  {Object}            options
    * @param  {boolean}           options.privateErrors - Whether the errors thrown when running this method should have their messages returned to the user by default.
    * @param  {Object}            options.createLogger - function that when called returns logger
@@ -105,7 +105,7 @@ class GrpcMethod {
    * @return {GrpcError}
    */
   grpcError (err, { metadata = {}, status = grpc.status.INTERNAL } = {}) {
-    let message = `Call terminated before completion`
+    let message = 'Call terminated before completion'
 
     // if the error is marked as public, or if this method is publicizing
     // errors by default, we should include the message
@@ -126,7 +126,7 @@ class GrpcMethod {
    * @return {void}
    */
   logRequestStart (logger) {
-    logger.info(`Request received: ${this.messageId}`)
+    logger.info('Request received')
   }
 
   /**
@@ -137,7 +137,7 @@ class GrpcMethod {
    * @return {void}
    */
   logRequestParams (logger, params) {
-    logger.debug(`Request made with payload: ${this.messageId}`, params)
+    logger.debug('Request made with payload', params)
   }
 
   /**
@@ -147,7 +147,7 @@ class GrpcMethod {
    * @return {void}
    */
   logRequestCancel (logger) {
-    logger.info(`Request cancelled by client: ${this.messageId}`)
+    logger.info('Request cancelled by client')
   }
 
   /**
@@ -157,7 +157,7 @@ class GrpcMethod {
    * @return {void}
    */
   logRequestEnd (logger) {
-    logger.info(`Request completed: ${this.messageId}`)
+    logger.info('Request completed')
   }
 
   /**
@@ -168,8 +168,8 @@ class GrpcMethod {
    * @return {void}
    */
   logResponse (logger, data) {
-    logger.info(`Response generated: ${this.messageId}`)
-    logger.debug(`Responding with payload: ${this.messageId}`, data)
+    logger.info('Response generated')
+    logger.debug('Responding with payload', data)
   }
 
   /**
@@ -180,7 +180,7 @@ class GrpcMethod {
    * @return {void}
    */
   logError (logger, err) {
-    logger.error(`Error while handling request: ${this.messageId}`)
+    logger.error('Error while handling request')
     logger.error(err.stack)
   }
 }
