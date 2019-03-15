@@ -26,7 +26,7 @@ class GrpcUnaryMethod extends GrpcMethod {
     let request
 
     try {
-      this.logRequestStart()
+      // this.logRequestStart()
 
       const { method, auth, createLogger, requestOptions } = this
       const requestId = generateId()
@@ -44,7 +44,7 @@ class GrpcUnaryMethod extends GrpcMethod {
         ...requestOptions
       }
 
-      this.logRequestParams(request.params)
+      // this.logRequestParams(request.params)
 
       if (auth) {
         logger.debug('Authenticating GRPC Request')
@@ -54,17 +54,17 @@ class GrpcUnaryMethod extends GrpcMethod {
 
       const response = await method(request, this.responses, responseMetadata)
 
-      this.logResponse(response)
+      // this.logResponse(response)
 
       // sendUnaryData expects a callback-like signature, so we leave the first parameter null in the success case
       return sendUnaryData(null, response, this.metadata(responseMetadata))
     } catch (err) {
-      this.logError(err)
+      // this.logError(err)
 
       // sendUnaryData expects a callback-like signature, so we put the error in the first parameter
       return sendUnaryData(this.grpcError(err), null, this.metadata(responseMetadata))
     } finally {
-      this.logRequestEnd()
+      // this.logRequestEnd()
     }
   }
 }

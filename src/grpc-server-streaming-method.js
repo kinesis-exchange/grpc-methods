@@ -28,7 +28,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
     let request
 
     try {
-      this.logRequestStart()
+      // this.logRequestStart()
 
       const { method, auth, createLogger, requestOptions } = this
 
@@ -45,16 +45,16 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         ...requestOptions
       }
 
-      this.logRequestParams(request.params)
+      // this.logRequestParams(request.params)
 
       call.on('cancelled', () => {
-        this.logRequestCancel()
-        this.logRequestEnd()
+        // this.logRequestCancel()
+        // this.logRequestEnd()
       })
 
       call.on('error', (e) => {
-        this.logError(e)
-        this.logRequestEnd()
+        // this.logError(e)
+        // this.logRequestEnd()
       })
 
       if (auth) {
@@ -65,7 +65,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
 
       await method(request, this.responses, responseMetadata)
 
-      this.logRequestEnd()
+      // this.logRequestEnd()
 
       call.end(this.metadata(responseMetadata))
     } catch (e) {
@@ -86,7 +86,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
    * @return {void}
    */
   send (call, data) {
-    this.logResponse(data)
+    // this.logResponse(data)
     call.write(data)
   }
 }
