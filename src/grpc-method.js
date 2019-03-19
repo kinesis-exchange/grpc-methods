@@ -27,7 +27,7 @@ class GrpcMethod {
    * @param  {string}            messageId - Identifier for log messages and public messages. Typically '[${serviceName}:${methodName}]'
    * @param  {Object}            options
    * @param  {boolean}           options.privateErrors - Whether the errors thrown when running this method should have their messages returned to the user by default.
-   * @param  {Object}            options.createLogger - function that when called returns logger
+   * @param  {Function}          options.createLogger - function that when called returns logger
    * @param  {*}                 options.* - additional parameters to be included in each request object
    * @param  {Object}            responses - Response constructors to pass to the method
    * @param  {GrpcMethod~method} auth - method called before request
