@@ -109,7 +109,7 @@ class GrpcMethod {
 
     // if the error is marked as public, or if this method is publicizing
     // errors by default, we should include the message
-    if (!this.privateErrors || err instanceof PublicError) {
+    if (this.isPublicError(err)) {
       message = err.message
     }
 
@@ -118,6 +118,15 @@ class GrpcMethod {
       message: `${this.messageId} ${message}`,
       metadata: this.metadata(metadata)
     }
+  }
+
+  /**
+   * Whether a given error should be displayed publicly to the caller
+   * @param   {Error}  err - Error to determine whether to display
+   * @returns {Boolean}      Whether the error should be displayed to the caller
+   */
+  isPublicError (err) {
+    return !this.privateErrors || err instanceof PublicError
   }
 
   /**
@@ -180,7 +189,7 @@ class GrpcMethod {
    * @return {void}
    */
   logError (logger, err) {
-    logger.error('Error while handling request')
+    logger.error(`Error while handling request: ${this.messageId}`, { public: this.isPublicError(err), message: err.message })
     logger.error(err.stack)
   }
 }
