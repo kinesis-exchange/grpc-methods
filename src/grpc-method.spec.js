@@ -239,4 +239,48 @@ describe('GrpcMethod', () => {
       expect(grpcErr.message).to.include('fake error')      
     })
   })
+
+  describe('#logError', () => {
+    let grpcMethod
+    let err
+
+    beforeEach(() => {
+      logger = {
+        error: sinon.stub()
+      }
+      err = new Error('fake error')
+      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+    })
+
+    it('logs an error and the stack', () => {
+      grpcMethod.logError(err)
+
+      expect(logger.error).to.have.been.calledTwice()
+      expect(logger.error).to.have.been.calledWith(`Error while handling request: ${messageId}`, sinon.match({ message: 'fake error' }))
+      expect(logger.error).to.have.been.calledWith(err.stack)
+    })
+
+    it('makes error messages public by default', () => {
+      grpcMethod.logError(err)
+
+      expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: true }))
+    })
+
+    it('makes error message private if the method has private errors', () => {
+      grpcMethod.privateErrors = true
+
+      grpcMethod.logError(err)
+
+      expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: false }))
+    })
+
+    it('makes error messages public if they are PublicErrors', () => {
+      grpcMethod.privateErrors = true
+
+      err = new PublicError('fake error')
+      grpcMethod.logError(err)
+
+      expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: true, message: 'fake error' }))      
+    })
+  })
 })
