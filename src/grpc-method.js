@@ -44,7 +44,7 @@ class GrpcMethod {
     this.messageId = messageId
 
     // function to create logger
-    this.createLogger = createLogger
+    this.createRequestLogger = createLogger
 
     // Options to include in every request object
     this.requestOptions = requestOptions

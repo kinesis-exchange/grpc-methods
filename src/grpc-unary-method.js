@@ -26,13 +26,13 @@ class GrpcUnaryMethod extends GrpcMethod {
     let request
 
     try {
-      const { method, auth, createLogger, requestOptions } = this
+      const { method, auth, createRequestLogger, requestOptions } = this
 
       // generate unique id to be associated with the request
       const requestId = generateId(6)
 
       // create the logger with the requestId and messageid
-      const logger = createLogger({ messageId: this.messageId, requestId })
+      const logger = createRequestLogger({ messageId: this.messageId, requestId })
 
       this.logRequestStart(logger)
 
@@ -45,6 +45,7 @@ class GrpcUnaryMethod extends GrpcMethod {
         logger,
         metadata: call.metadata.getMap(),
         requestId,
+        messageId: this.messageId,
         ...requestOptions
       }
 

@@ -61,8 +61,8 @@ describe('GrpcMethod', () => {
     it('aliases the service logger', () => {
       const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
-      expect(grpcMethod).to.have.property('createLogger')
-      expect(grpcMethod.createLogger).to.be.equal(createLogger)
+      expect(grpcMethod).to.have.property('createRequestLogger')
+      expect(grpcMethod.createRequestLogger).to.be.equal(createLogger)
     })
 
     it('aliases the object of responses', () => {
