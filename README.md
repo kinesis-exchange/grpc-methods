@@ -8,7 +8,7 @@ Grpc Methods
 Make writing Grpc Methods fun by using these handy wrappers
 
 ### Build Status
-[![CircleCI](https://circleci.com/gh/kinesis-exchange/grpc-methods.svg?style=svg)](https://circleci.com/gh/kinesis-exchange/grpc-methods)
+[![CircleCI](https://circleci.com/gh/kinesis-exchange/grpc-methods.svg?style=svg)](https://circleci.com/gh/kinesis-exchange/grpc-methods) [![Greenkeeper badge](https://badges.greenkeeper.io/sparkswap/grpc-methods.svg)](https://greenkeeper.io/)
 
 ## Quickstart
 
