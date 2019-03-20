@@ -24,6 +24,7 @@ describe('GrpcUnaryMethod', () => {
   let metadata
   let metadataContents
   let auth
+  let createLogger
 
   beforeEach(() => {
     GrpcMethod = sinon.stub()
@@ -67,6 +68,8 @@ describe('GrpcUnaryMethod', () => {
       request: 'fake request',
       metadata
     }
+
+    createLogger = sinon.stub().returns(logger)
     sendUnaryData = sinon.stub()
   })
 
@@ -74,12 +77,13 @@ describe('GrpcUnaryMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
+      grpcMethod = new GrpcUnaryMethod(method, messageId, { createLogger, auth, ...requestOptions }, responses)
     })
 
     it('logs the start of the request', () => {
       grpcMethod.exec(call, sendUnaryData)
       expect(logRequestStart).to.have.been.calledOnce()
+      expect(logRequestStart).to.have.been.calledWith(logger)
       expect(logRequestStart).to.have.been.calledBefore(method)
     })
 
@@ -87,7 +91,7 @@ describe('GrpcUnaryMethod', () => {
       grpcMethod.exec(call, sendUnaryData)
       expect(logRequestParams).to.have.been.calledOnce()
       expect(logRequestParams).to.have.been.calledBefore(method)
-      expect(logRequestParams).to.have.been.calledWith(call.request)
+      expect(logRequestParams).to.have.been.calledWith(logger, call.request)
     })
 
     it('calls the assigned method', async () => {
@@ -129,7 +133,7 @@ describe('GrpcUnaryMethod', () => {
     })
 
     it('skips auth if auth parameter is null', () => {
-      grpcMethod = new GrpcUnaryMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcUnaryMethod(method, messageId, { createLogger, ...requestOptions }, responses)
       grpcMethod.exec(call, sendUnaryData)
       expect(auth).to.not.have.been.calledOnce()
     })
@@ -156,7 +160,7 @@ describe('GrpcUnaryMethod', () => {
         await grpcMethod.exec(call, sendUnaryData)
 
         expect(logResponse).to.have.been.calledOnce()
-        expect(logResponse).to.have.been.calledWith(fakeResponse)
+        expect(logResponse).to.have.been.calledWith(logger, fakeResponse)
       })
 
       it('sends the method output as unary data', async () => {
@@ -190,7 +194,7 @@ describe('GrpcUnaryMethod', () => {
         await grpcMethod.exec(call, sendUnaryData)
 
         expect(logError).to.have.been.calledOnce()
-        expect(logError).to.have.been.calledWith(fakeError)
+        expect(logError).to.have.been.calledWith(logger, fakeError)
       })
 
       it('sends an error as unary data', async () => {
@@ -223,6 +227,7 @@ describe('GrpcUnaryMethod', () => {
       await grpcMethod.exec(call, sendUnaryData)
 
       expect(logRequestEnd).to.have.been.calledOnce()
+      expect(logRequestEnd).to.have.been.calledWith(logger)
     })
 
     it('logs on failed request end', async () => {
@@ -231,6 +236,7 @@ describe('GrpcUnaryMethod', () => {
       await grpcMethod.exec(call, sendUnaryData)
 
       expect(logRequestEnd).to.have.been.calledOnce()
+      expect(logRequestEnd).to.have.been.calledWith(logger)
     })
   })
 })

@@ -14,7 +14,7 @@ describe('GrpcMethod', () => {
   let PublicError
   let method
   let requestOptions
-  let logger
+  let createLogger
   let responses
   let messageId
   let auth
@@ -30,7 +30,7 @@ describe('GrpcMethod', () => {
       status: grpcStatus
     })
 
-    logger = sinon.stub()
+    createLogger = sinon.stub()
     responses = {
       FakeResponse: sinon.stub()
     }
@@ -45,62 +45,62 @@ describe('GrpcMethod', () => {
 
   describe('new', () => {
     it('assigns the method', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('method')
       expect(grpcMethod.method).to.be.equal(method)
     })
 
     it('assigns the message id', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('messageId')
       expect(grpcMethod.messageId).to.be.equal(messageId)
     })
 
     it('aliases the service logger', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
-      expect(grpcMethod).to.have.property('logger')
-      expect(grpcMethod.logger).to.be.equal(logger)
+      expect(grpcMethod).to.have.property('createRequestLogger')
+      expect(grpcMethod.createRequestLogger).to.be.equal(createLogger)
     })
 
     it('aliases the object of responses', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('responses')
       expect(grpcMethod.responses).to.be.equal(responses)
     })
 
     it('assigns the request options', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('requestOptions')
       expect(grpcMethod.requestOptions).to.be.eql(requestOptions)
     })
 
     it('assigns an authorization function if present', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, auth, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, auth, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('auth')
       expect(grpcMethod.auth).to.be.equal(auth)
     })
 
     it('assigns authorization to null', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('auth')
       expect(grpcMethod.auth).to.be.null()
     })
 
     it('marks errors public by default', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('privateErrors', false)
     })
 
     it('marks errors  private if specified', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { privateErrors: true, logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { privateErrors: true, createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod).to.have.property('privateErrors', true)
     })
@@ -108,7 +108,7 @@ describe('GrpcMethod', () => {
 
   describe('#exec', () => {
     it('throws the unimplemented exec', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       expect(grpcMethod.exec).to.throw()
     })
@@ -116,7 +116,7 @@ describe('GrpcMethod', () => {
 
   describe('#register', () => {
     it('binds exec to the GrpcMethod context', () => {
-      const grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      const grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
 
       grpcMethod.exec = sinon.stub()
 
@@ -133,7 +133,7 @@ describe('GrpcMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
     })
 
     it('creates grpc metadata', () => {
@@ -171,7 +171,7 @@ describe('GrpcMethod', () => {
     let grpcMethod
 
     beforeEach(() => {
-      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
+      grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
     })
 
     it('creates a grpc-compliant error object', () => {
@@ -236,24 +236,25 @@ describe('GrpcMethod', () => {
       const err = new PublicError('fake error')
       const grpcErr = grpcMethod.grpcError(err)
 
-      expect(grpcErr.message).to.include('fake error')      
+      expect(grpcErr.message).to.include('fake error')
     })
   })
 
   describe('#logError', () => {
     let grpcMethod
     let err
+    let logger
 
     beforeEach(() => {
+      err = new Error('fake error')
+      grpcMethod = new GrpcMethod(method, messageId, { createLogger, ...requestOptions }, responses)
       logger = {
         error: sinon.stub()
       }
-      err = new Error('fake error')
-      grpcMethod = new GrpcMethod(method, messageId, { logger, ...requestOptions }, responses)
     })
 
     it('logs an error and the stack', () => {
-      grpcMethod.logError(err)
+      grpcMethod.logError(logger, err)
 
       expect(logger.error).to.have.been.calledTwice()
       expect(logger.error).to.have.been.calledWith(`Error while handling request: ${messageId}`, sinon.match({ message: 'fake error' }))
@@ -261,7 +262,7 @@ describe('GrpcMethod', () => {
     })
 
     it('makes error messages public by default', () => {
-      grpcMethod.logError(err)
+      grpcMethod.logError(logger, err)
 
       expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: true }))
     })
@@ -269,7 +270,7 @@ describe('GrpcMethod', () => {
     it('makes error message private if the method has private errors', () => {
       grpcMethod.privateErrors = true
 
-      grpcMethod.logError(err)
+      grpcMethod.logError(logger, err)
 
       expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: false }))
     })
@@ -278,9 +279,9 @@ describe('GrpcMethod', () => {
       grpcMethod.privateErrors = true
 
       err = new PublicError('fake error')
-      grpcMethod.logError(err)
+      grpcMethod.logError(logger, err)
 
-      expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: true, message: 'fake error' }))      
+      expect(logger.error).to.have.been.calledWith(sinon.match.any, sinon.match({ public: true, message: 'fake error' }))
     })
   })
 })
