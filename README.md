@@ -1,14 +1,12 @@
 <img src="https://sparkswap.com/img/logo.svg" alt="sparkswap - sparkswap.com" width="400">
 
 [![CircleCI](https://circleci.com/gh/sparkswap/grpc-methods.svg?style=svg)](https://circleci.com/gh/sparkswap/grpc-methods)
+[![Greenkeeper badge](https://badges.greenkeeper.io/sparkswap/grpc-methods.svg)](https://greenkeeper.io/)
 
 Grpc Methods
 ============
 
 Make writing Grpc Methods fun by using these handy wrappers
-
-### Build Status
-[![CircleCI](https://circleci.com/gh/kinesis-exchange/grpc-methods.svg?style=svg)](https://circleci.com/gh/kinesis-exchange/grpc-methods) [![Greenkeeper badge](https://badges.greenkeeper.io/sparkswap/grpc-methods.svg)](https://greenkeeper.io/)
 
 ## Quickstart
 
