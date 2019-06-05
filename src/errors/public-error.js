@@ -4,7 +4,7 @@
  */
 class PublicError extends Error {
   /**
-   * @param {String} message
+   * @param {string} message
    * @param {Error} err
    * @throws {Error} no message provided
    * @throws {Error} no error provided

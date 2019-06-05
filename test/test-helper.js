@@ -1,5 +1,5 @@
 /**
- * Kinesis test helper
+ * Sparkswap test helper
  *
  * NOTE: This file is specifically loaded before all tests so that we
  * can globally require some files.
@@ -14,7 +14,7 @@ const chaiAsPromised = require('chai-as-promised')
 const delay = require('timeout-as-promise')
 const timekeeper = require('timekeeper')
 
-const { expect, Assertion } = chai
+const { expect } = chai
 
 chai.use(dirtyChai)
 chai.use(sinonChai)

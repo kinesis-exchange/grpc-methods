@@ -13,9 +13,9 @@ class GrpcUnaryMethod extends GrpcMethod {
   /**
    * Execute a unary method and return a response to the client
    *
-   * @param  {grpc~ServerUnaryCall}
-   * @param  {grpc.Server~sendUnaryData}
-   * @return {void}
+   * @param {grpc~ServerUnaryCall} call
+   * @param {grpc.Server~sendUnaryData} sendUnaryData
+   * @returns {void}
    */
   async exec (call, sendUnaryData) {
     // this object should be modified (but not replaced) by `method` in order to send

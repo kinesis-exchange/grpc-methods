@@ -25,13 +25,13 @@ class GrpcMethod {
    *
    * @param  {GrpcMethod~method} method - Method to be wrapped and called during execution
    * @param  {string}            messageId - Identifier for log messages and public messages. Typically '[${serviceName}:${methodName}]'
-   * @param  {Object}            options
+   * @param  {object}            options
    * @param  {boolean}           options.privateErrors - Whether the errors thrown when running this method should have their messages returned to the user by default.
    * @param  {Function}          options.createLogger - function that when called returns logger
+   * @param  {GrpcMethod~method} options.auth - method called before request
    * @param  {*}                 options.* - additional parameters to be included in each request object
-   * @param  {Object}            responses - Response constructors to pass to the method
-   * @param  {GrpcMethod~method} auth - method called before request
-   * @return {GrpcMethod}
+   * @param  {object}            responses - Response constructors to pass to the method
+   * @returns {GrpcMethod}
    */
   constructor (method, messageId = '', { privateErrors = false, createLogger = (() => console), auth = null, ...requestOptions } = {}, responses = {}) {
     // Method definition
@@ -59,8 +59,8 @@ class GrpcMethod {
   /**
    * Abstract function to be implemented by subclasses for method execution
    *
-   * @param  {grpc.internal~Call}
-   * @return {void}
+   * @param {grpc.internal~Call} call
+   * @returns {void}
    */
   exec (call) {
     throw new Error('Unimplemented Abstract Method')
@@ -69,7 +69,7 @@ class GrpcMethod {
   /**
    * Create a function that can be used as a service implementation in grpc.Server#addService
    *
-   * @return {function} GrpcMethod#exec bound to the instance context
+   * @returns {Function} GrpcMethod#exec bound to the instance context
    */
   register () {
     return this.exec.bind(this)
@@ -78,8 +78,8 @@ class GrpcMethod {
   /**
    * Generates timestamp meta data for a grpc request
    *
-   * @param {Object} customMeta Key value object of custom metadata to add
-   * @return {grpc#Metadata}
+   * @param {object} customMeta - Key value object of custom metadata to add
+   * @returns {grpc#Metadata}
    */
   metadata (customMeta = {}) {
     const meta = new grpc.Metadata()
@@ -98,11 +98,11 @@ class GrpcMethod {
   /**
    * Format errors for consumption by external grpc clients
    *
-   * @param  {error}           err                                   Error to be formatted for public consumption
-   * @param  {Object}          [options={}]
-   * @param  {Object}          [options.metadata={}]                 Custom metadata to be added to this error
-   * @param  {grpc.status<ANY>} [options.status=grpc.status.INTERNAL] GRPC Status code to be included with the error
-   * @return {GrpcError}
+   * @param  {error}           err                                   - Error to be formatted for public consumption
+   * @param  {object}          [options={}]
+   * @param  {object}          [options.metadata={}]                 - Custom metadata to be added to this error
+   * @param  {grpc.status<ANY>} [options.status=grpc.status.INTERNAL] - GRPC Status code to be included with the error
+   * @returns {GrpcError}
    */
   grpcError (err, { metadata = {}, status = grpc.status.INTERNAL } = {}) {
     let message = 'Call terminated before completion'
@@ -123,7 +123,7 @@ class GrpcMethod {
   /**
    * Whether a given error should be displayed publicly to the caller
    * @param   {Error}  err - Error to determine whether to display
-   * @returns {Boolean}      Whether the error should be displayed to the caller
+   * @returns {boolean}      Whether the error should be displayed to the caller
    */
   isPublicError (err) {
     return !this.privateErrors || err instanceof PublicError
@@ -131,8 +131,8 @@ class GrpcMethod {
 
   /**
    * Log the start of a request
-   * @param {Object} logger Logger to be used by the method
-   * @return {void}
+   * @param {object} logger - Logger to be used by the method
+   * @returns {void}
    */
   logRequestStart (logger) {
     logger.info('Request received')
@@ -141,9 +141,9 @@ class GrpcMethod {
   /**
    * Log the parameters of a request
    *
-   * @param {Object} logger Logger to be used by the method
-   * @param  {Object} parameters of the request
-   * @return {void}
+   * @param {object} logger - Logger to be used by the method
+   * @param  {object} params - parameters of the request
+   * @returns {void}
    */
   logRequestParams (logger, params) {
     logger.debug('Request made with payload', params)
@@ -152,8 +152,8 @@ class GrpcMethod {
   /**
    * Log client cancellation of a request
    *
-   * @param {Object} logger Logger to be used by the method
-   * @return {void}
+   * @param {object} logger - Logger to be used by the method
+   * @returns {void}
    */
   logRequestCancel (logger) {
     logger.info('Request cancelled by client')
@@ -162,8 +162,8 @@ class GrpcMethod {
   /**
    * Log completion (successful or otherwise) of a request
    *
-   * @param {Object} logger Logger to be used by the method
-   * @return {void}
+   * @param {object} logger - Logger to be used by the method
+   * @returns {void}
    */
   logRequestEnd (logger) {
     logger.info('Request completed')
@@ -172,9 +172,9 @@ class GrpcMethod {
   /**
    * Log data that will be sent to the client
    *
-   * @param {Object} logger Logger to be used by the method
-   * @param  {Object} data
-   * @return {void}
+   * @param {object} logger - Logger to be used by the method
+   * @param  {object} data
+   * @returns {void}
    */
   logResponse (logger, data) {
     logger.info('Response generated')
@@ -184,9 +184,9 @@ class GrpcMethod {
   /**
    * Log errors generated while handling request
    *
-   * @param {Object} logger Logger to be used by the method
+   * @param {object} logger - Logger to be used by the method
    * @param  {error} err
-   * @return {void}
+   * @returns {void}
    */
   logError (logger, err) {
     logger.error(`Error while handling request: ${this.messageId}`, { public: this.isPublicError(err), message: err.message })

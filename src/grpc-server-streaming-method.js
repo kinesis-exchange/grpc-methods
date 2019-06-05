@@ -17,7 +17,7 @@ class GrpcServerStreamingMethod extends GrpcMethod {
    * Execute a server-streaming method and close the stream when it concludes
    *
    * @param  {grpc~ServerWritableStream} call
-   * @return {void}
+   * @returns {void}
    */
   async exec (call) {
     // this object should be modified (but not replaced) by `method` in order to send
@@ -86,9 +86,10 @@ class GrpcServerStreamingMethod extends GrpcMethod {
   /**
    * Send a chunk of data back to the client
    *
-   * @param  {grpc~ServerWritableStream} call the active call to send the data to
-   * @param  {Object} data payload to send to the client
-   * @return {void}
+   * @param {grpc~ServerWritableStream} call - the active call to send the data to
+   * @param {object} logger
+   * @param {object} data - payload to send to the client
+   * @returns {void}
    */
   send (call, logger, data) {
     this.logResponse(logger, data)
