@@ -57,11 +57,6 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         this.logRequestEnd(request.logger)
       })
 
-      call.on('error', (e) => {
-        this.logError(request.logger, e)
-        this.logRequestEnd(request.logger)
-      })
-
       if (auth) {
         logger.debug('Authenticating GRPC Request')
         await auth(request)
