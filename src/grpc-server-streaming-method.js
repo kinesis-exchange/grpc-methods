@@ -43,7 +43,6 @@ class GrpcServerStreamingMethod extends GrpcMethod {
         logger,
         send: this.send.bind(this, call, logger),
         onCancel: (fn) => { call.on('cancelled', fn) },
-        onError: (fn) => { call.on('error', fn) },
         metadata: call.metadata.getMap(),
         requestId,
         messageId: this.messageId,
