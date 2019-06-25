@@ -157,24 +157,6 @@ describe('GrpcServerStreamingMethod', () => {
         expect(call.on).to.have.been.calledWith('cancelled', fakeListener)
       })
 
-      it('includes an onError function', async () => {
-        await grpcMethod.exec(call)
-        expect(method).to.have.been.calledWith(sinon.match({ send: sinon.match.func }))
-      })
-
-      it('sets onError to the cancelled handler', async () => {
-        const fakeListener = function () {
-          return 'myfake'
-        }
-
-        await grpcMethod.exec(call)
-        const request = method.args[0][0]
-
-        request.onError(fakeListener)
-
-        expect(call.on).to.have.been.calledWith('error', fakeListener)
-      })
-
       it('includes the client metadata', async () => {
         await grpcMethod.exec(call)
         expect(method).to.have.been.calledWith(sinon.match({ metadata: metadataContents }))
